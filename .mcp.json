@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "GarchiCMS": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://garchi.co.uk/mcp",
+        "--header",
+        "Authorization: Bearer ${YOUR_TOKEN}"
+      ],
+      "env": {
+        "YOUR_TOKEN": "Provide your API token here"
+      }
+    }
+  }
+}

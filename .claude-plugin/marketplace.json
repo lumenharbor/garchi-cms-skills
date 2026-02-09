@@ -1,0 +1,37 @@
+{
+  "name": "garchi-cms-skills",
+  "owner": {
+    "name": "Garchi CMS",
+    "email": "support@lumenharbor.co.uk",
+    "url": "https://garchi.co.uk"
+  },
+  "metadata": {
+    "description": "Garchi CMS companion for Claude Code. Skills to manage website and app content along with code generation to render Garchi CMS content."
+  },
+  "plugins": [
+    {
+      "name": "garchi-cms-plugin",
+      "source": "./",
+      "description": "Garchi CMS developer companion for Claude Code with skills to manage website and app content along with code generation to render Garchi CMS content.",
+      "version": "1.0.0",
+      "homepage": "https://github.com/lumenharbor/garchi-cms-skills",
+      "repository": "https://github.com/lumenharbor/garchi-cms-skills",
+      "license": "MIT",
+      "keywords": [
+        "garchi",
+        "cms",
+        "data items",
+        "headless web",
+        "content",
+        "structured-content"
+      ],
+      "author": {
+        "name": "Aditya Kadam",
+        "email": "support@lumenharbor.co.uk",
+        "url": "https://garchi.co.uk"
+      },
+      "category": "cms",
+      "tags": ["garchi", "cms", "data items", "headless web", "structured-content"]
+    }
+  ]
+}
