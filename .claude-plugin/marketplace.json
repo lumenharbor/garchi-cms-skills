@@ -16,14 +16,8 @@
       "version": "1.0.0",
       "homepage": "https://github.com/lumenharbor/garchi-cms-skills",
       "repository": "https://github.com/lumenharbor/garchi-cms-skills",
-      "license": "MIT",
-      "keywords": [
-        "garchi",
-        "cms",
-        "data items",
-        "headless web",
-        "content",
-        "structured-content"
+      "skills" : [
+        "./garchi-cms-content"
       ],
       "author": {
         "name": "Aditya Kadam",
