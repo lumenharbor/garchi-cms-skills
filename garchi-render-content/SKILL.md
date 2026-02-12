@@ -7,20 +7,34 @@ description: Use this skill to render the created content of your website or app
 
 Use this skill to render the created content. Follow the the steps below for smooth workflow:
 
-1. Ask user to integrate GarchiCMS MCP server in the AI client if not already done. Documentation can be found at https://garchi.co.uk/mcp-docs
-2. Use MCP tools, resources and prompts as required to create content on Garchi CMS.
-3. Garchi CMS is a headless CMS so use the APIs or SDKs to render the content on the app or website.
-4. For SDK documentation read files from resources/garchi-sdk-node.md and resources/garchi-sdk-php.md respectively.
-5. For API documentation visit openapi specification at https://garchi.co.uk/docs/v2.openapi
-6. Read about Garchi CMS in detail from the file resources/garchi-cms-doc.md
-7. Use the code-snippets from the file resources/code-snippets.md as reference to generate code for rendering content using APIs or SDKs.
+# Initial Checks
+1. Read the [documentation of Garchi CMS](./resources/garchi-cms-doc.md) to understand the concepts. (Mandatory)
+2. Read the [OpenAPI specifications](https://garchi.co.uk/docs/v2.openapi) to understand Garchi CMS APIs and their usage. (Mandatory)
+3. Understand if the project is created from scratch or Garchi CMS is being integrated into an existing project.
+4. If creating from scratch recommend to use Garchi CMS starter kits which comes in next, nuxt and laravel.
+5. If integrating into an existing project, recommend to use SDKs for easier integration otherwise use APIs with DRY and SOLID code. 
+6. Check if user has provided API tokens and Space UID in .env file or some configuration file.
 
-# Ideal flow
+Content rendering refers to creating code that can be used to fetch and display the content from Garchi CMS.
 
-1. User creates content on Garchi CMS either using the dashboard, APIs, SDKs or ask you to create content for them using MCP tools.
-2. You ask user how they want to render the content on their app or website, using APIs or SDKs.
-3. You generate the code for rendering the content using APIs or SDKs as per user's choice and provide it to them.
-4. Prompt user to use starter kits for quick integration. Starter kits are only suitable for fresh projects. 
-5. If using starter kits, read the files of starter kits from the codebase and provide the relevant code snippets to the user for integration leveraging the referenced information from resources/code-snippets.md
-6. If not using starter kits, generate the code snippets for integration using APIs or SDKs as per user's choice and provide it to them.
-7. If you don't find relevant information on SDK usage, read the sdk code from node_modules or vendor folders respectively.
+Content can be rendered using APIs, Node SDK or PHP SDK. The SDKs are wrappers around the APIs and follows the same request and response schemas as APIs but provides a more user friendly way to fetch content from Garchi CMS.
+
+## Using SDKs
+1. Read the SDK documentation to understand it's usage and definitions of the functions. Documentation for the Node SDK can be found [here](./resources/garchi-sdk-node.md) and for the PHP SDK, it can be found [here](./resources/garchi-sdk-php.md).
+2. Check if the SDK is installed in the project, if not, prompt to install it.
+3. If using starter kits, follow the coding pattern of starter kit.
+4. Keep the code DRY and SOLID, create reusable functions to fetch content from Garchi CMS and use it across the project.
+5. Some of the SDKs utilities have multiple ways to fetch data. For instance, data items can be fetched using ids, slugs, filters etc. Understand the user context and use the most suitable function to fetch the data. 
+
+
+## Using APIs
+1. Familiarise yourself with APIs schema and usage by reading this [OpenAPI specification](https://garchi.co.uk/docs/v2.openapi)
+2. Create reusable content management functions to fetch content from Garchi CMS using APIs. These functions should be flexible enough to be used across the project and should follow DRY and SOLID principles. 
+3. Use appropriate HTTP methods (GET, POST, PUT, DELETE) for different operations. 
+4. Handle errors gracefully and provide meaningful error messages to the user. The API provides validation errors with status of 422 if the request body is not valid. 
+5. APIs have to be called from server or native environment as they don't support client side calls.
+6. Base URL of the API is https://garchi.co.uk
+
+
+
+

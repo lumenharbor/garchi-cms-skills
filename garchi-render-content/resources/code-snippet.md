@@ -500,3 +500,38 @@ export default async function Page({ params }: PageParams) {
 As the description of each data item in this case blog post is HTML, make sure to sanitise it to avoid xss attack.
 
 
+## Preview mode.
+
+To enable preview mode, first check if user has provided the preview token.
+Preview token can be retrieved from the CMS dashboard by visiting Space Settings ----> Preview Token.
+
+The Garchi CMS editor automatically pass the space preview token and slug in the URL as query parameter as ```?preview_token=Token&slug=urlSlug```
+
+Example of Next JS draft mode API to enable preview mode. 
+
+```ts
+//app/api/draft/route.ts
+
+import { draftMode } from 'next/headers'
+import { redirect } from 'next/navigation'
+ 
+export async function GET(request: Request) {
+
+  const { searchParams } = new URL(request.url)
+  const previewToken = searchParams.get('preview_token')
+  const slug = searchParams.get('slug')
+
+  
+  
+  if (previewToken !== process.env.GARCHI_PREVIEW_TOKEN || !slug) {
+    return new Response('Invalid token', { status: 401 })
+  }
+  
+  const draft = await draftMode()
+  draft.enable()
+
+  redirect(slug)
+
+}
+
+```
