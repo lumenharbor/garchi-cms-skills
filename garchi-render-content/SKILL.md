@@ -1,9 +1,9 @@
 ---
-name: garchi-cms-content
+name: garchi-render-content
 description: Use this skill to render the created content of your website or app using Garchi CMS. The content can be rendered using APIs or SDKs. You can create pages, data items, section templates, manage assets and other content on Garchi CMS using this skill.
 ---
 
-# Usage of Skill: garchi-cms-content
+# Usage of Skill: garchi-render-content
 
 Use this skill to render the created content. Follow the the steps below for smooth workflow:
 

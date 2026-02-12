@@ -3,18 +3,17 @@
 ## Pre-requisites
 Before reading this document read documents that are available in this folder
 
-- ./garchi-cmd-doc.md
+- ./garchi-cms-doc.md
 - ./garchi-sdk-node.md
 - ./garchi-sdk-php.md
 
-For OpenAPI reference of the Garchi CMS API visit https://garchi.co.uk/docs/v2.openapi
+For OpenAPI reference of the Garchi CMS API [visit](https://garchi.co.uk/docs/v2.openapi)
 
-
-These snippets are useful to generate the necessary code for rendering content from Garchi CMS. These are references and same logic can be used in other tech stacks like Laravel, Nuxt, SvelteKit etc.
+These snippets are references to generate the necessary code for rendering content from Garchi CMS. These are in Next JS and same logic can be used in other tech stacks like Laravel, Nuxt, SvelteKit etc.
 
 ## Page rendering
 
-A Page can be mapped to a headless web page in a website. To know more about page read ./garchi-cmd-doc.md from this resource.
+A Page can be mapped to a headless web page in a website. To know more about page read [here](./garchi-cms-doc.md).
 
 Each page's section map to a component in a code base. Below is an example of a how a page created on Garchi CMS with 3 sections namely Navbar, HeroContainer, BodyText can be rendered using Next JS.
 
@@ -71,8 +70,8 @@ export default function BodyText({
 
 The page api returns page details with associated sections. It's output schema can be found at [API Spec](https://garchi.co.uk/docs/v2.openapi). The recommended method is to use either Node or PHP sdk depending on the backend.
 
-Read node sdk docs in ./garchi-sdk-node.md
-Read PHP sdk docs in ./garchi-sdk-php.md
+Read node sdk docs [here](./garchi-sdk-node.md)
+Read PHP sdk docs [here](./garchi-sdk-php.md)
 
 A dynamic component as below can be used to render these components dynamically. This acts as section renderer for all the Garchi CMS pages.
 
@@ -321,11 +320,11 @@ export default function TextWithStat({ title, description, subsections, ...props
 ## Data items rendering
 
 Data items enables creating of reusable, dynamic content like blog posts, products, etc. to display on your site.
-To know more about data items read ./garchi-cms-doc.md file in this folder.
+To know more about data items read [Garchi CMS Documentation](./garchi-cms-doc.md)  file in this folder.
 
 Data items can be fetched using API or SDK.
 
-Below is an example of fetching blog post data items and rendering them. Use this as a reference.
+Below is an example of fetching blog post data items using compound query utility and rendering them. Data items can be rendered using various ways depending upon the use cases. To know more read API spec or respective SDK documentation (Node, PHP).
 
 
 ```ts
@@ -334,9 +333,8 @@ import { GarchiItemAPIResponse } from "@garchicms/garchi-node-sdk";
 import {garchi} from '@/utils/garchi'
 
 
-
-
 export async function getBlogPosts(page: number = 1, category = 235) {
+
     try {
         const posts = await garchi.compoundQuery.query({
             dataset: "items",
