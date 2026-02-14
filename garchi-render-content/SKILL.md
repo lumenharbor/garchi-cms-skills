@@ -1,40 +1,70 @@
 ---
 name: garchi-render-content
-description: Use this skill to render the created content of your website or app using Garchi CMS. The content can be rendered using APIs or SDKs. You can create pages, data items, section templates, manage assets and other content on Garchi CMS using this skill.
+description: Render and integrate content from Garchi CMS into an app/website (Next/Nuxt/Laravel/etc). This skill focuses on code architecture, fetching, and rendering. Content creation/management should be done via MCP tools or the CMS.
 ---
 
-# Usage of Skill: garchi-render-content
+# Skill: garchi-render-content
 
-Use this skill to render the created content. Follow the the steps below for smooth workflow:
+## Scope
+- ✅ Build or improve the code needed to **fetch and render** Garchi CMS content (pages, sections, data items).
+- ✅ Integrate Garchi CMS into an existing codebase without breaking conventions.
+- ❌ Do not manage CMS content (create pages/sections/assets/templates) unless the user explicitly asks. Prefer MCP tools for CMS actions.
 
-# Initial Checks
-1. Read the [documentation of Garchi CMS](./resources/garchi-cms-doc.md) to understand the concepts. (Mandatory)
-2. Read the [OpenAPI specifications](https://garchi.co.uk/docs/v2.openapi) to understand Garchi CMS APIs and their usage. (Mandatory)
-3. Understand if the project is created from scratch or Garchi CMS is being integrated into an existing project.
-4. If creating from scratch recommend to use Garchi CMS starter kits which comes in next, nuxt and laravel.
-5. If integrating into an existing project, recommend to use SDKs for easier integration otherwise use APIs with DRY and SOLID code. 
-6. Check if user has provided API tokens and Space UID in .env file or some configuration file.
+## Always (non-negotiable rules)
+1. **Preserve Visual Editor attributes**
+   - For every section component, forward unknown/extra props/attributes to the **root element** (outermost wrapper).
+   - Framework-agnostic rule: “Unknown attributes must not be dropped; attach them to the root/host element.”
+   - Patterns:
+     - React/Preact/Solid: spread `...other` on root
+     - Vue: `v-bind="$attrs"` on root
+     - Svelte: spread `...$$restProps` on root
+     - Angular: preserve/pass through host attributes; do not strip unknown attrs
+     - Web Components: keep attrs on host or forward to outer wrapper
+     - Laravel Blade: ensure attributes are passed to the root element of the section component {{ $attributes->merge()}}
 
-Content rendering refers to creating code that can be used to fetch and display the content from Garchi CMS.
+2. **Do not modify reference snippets/docs**
+   - Treat [code-snippets](./resources/code-snippet.md) and provided examples as reference. Do not rewrite them unless asked.
 
-Content can be rendered using APIs, Node SDK or PHP SDK. The SDKs are wrappers around the APIs and follows the same request and response schemas as APIs but provides a more user friendly way to fetch content from Garchi CMS.
+3. **Keep codebase conventions**
+   - Follow existing linting, formatting, naming, and folder conventions.
+   - Avoid large refactors unless requested.
 
-## Using SDKs
-1. Read the SDK documentation to understand it's usage and definitions of the functions. Documentation for the Node SDK can be found [here](./resources/garchi-sdk-node.md) and for the PHP SDK, it can be found [here](./resources/garchi-sdk-php.md).
-2. Check if the SDK is installed in the project, if not, prompt to install it.
-3. If using starter kits, follow the coding pattern of starter kit.
-4. Keep the code DRY and SOLID, create reusable functions to fetch content from Garchi CMS and use it across the project.
-5. Some of the SDKs utilities have multiple ways to fetch data. For instance, data items can be fetched using ids, slugs, filters etc. Understand the user context and use the most suitable function to fetch the data. 
+## Initial checks (do first)
+1. Read [Garchi CMS documentation](./resources/garchi-cms-doc.md) (mandatory).
+2. Review [OpenAPI spec](https://garchi.co.uk/docs/v2.openapi) (mandatory).
+3. Read [Node SDK documentation](./resources/garchi-sdk-node.md) if using Node (optional but recommended).
+4. Read [PHP SDK documentation](./resources/garchi-sdk-php.md) if using PHP (optional but recommended).
+5. Identify the target stack and project type:
+   - Is this a starter-kit project or an existing codebase?
+6. Confirm configuration:
+   - API key + Space UID available in `.env` / config
+   - If preview mode is needed: preview token config exists
 
+## Recommended implementation workflow
+### A) Choose access method
+- Prefer starter kits for fresh projects. Ask user for the choice of available stack, next, nuxt, and laravel.
+- Prefer SDKs where available (Node SDK / PHP SDK).
+- If using raw API, create a small service layer (DRY/SOLID, typed, reusable). Raw API call should be made from server environment and is doesn't support client side calls. Use the OpenAPI spec for reference.
 
-## Using APIs
-1. Familiarise yourself with APIs schema and usage by reading this [OpenAPI specification](https://garchi.co.uk/docs/v2.openapi)
-2. Create reusable content management functions to fetch content from Garchi CMS using APIs. These functions should be flexible enough to be used across the project and should follow DRY and SOLID principles. 
-3. Use appropriate HTTP methods (GET, POST, PUT, DELETE) for different operations. 
-4. Handle errors gracefully and provide meaningful error messages to the user. The API provides validation errors with status of 422 if the request body is not valid. 
-5. APIs have to be called from server or native environment as they don't support client side calls.
-6. Base URL of the API is https://garchi.co.uk
+### B) Build the rendering pipeline
+1. Fetch page/data item from server-side (SSR/server runtime).
+2. Render sections via a single section renderer (mapper).
+3. Each section maps to a reusable component.
+4. Support nested sections (`subsections`) if present.
 
+### C) Quality + safety
+- Sanitize HTML before rendering (XSS).
+- Handle errors gracefully (notFound, fallback UI).
+- Use stable keys (prefer section id/uid over array index when available).
+- Add basic logging for missing components or invalid payload shapes.
 
+## Definition of Done (what “complete” means)
+- Pages/data items render correctly in the chosen stack.
+- Visual Editor attributes are preserved on all section components.
+- Preview/draft mode works (if required).
+- Errors are handled without infinite retries/loops.
+- HTML content is sanitized where applicable.
 
-
+## Loop prevention (stop conditions)
+- Do not retry the same failing operation more than 2 times.
+- After an update/fetch, verify state once; if still incorrect, stop and report what’s missing.
