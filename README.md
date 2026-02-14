@@ -19,11 +19,12 @@ It's recommended to refer documentations as agents can make mistakes.
 You need to install Garchi CMS MCP server in your AI client. 
 
 1. [Cursor IDE](https://garchi.co.uk/mcp-docs#cursor-ide)
-2. [Claude](https://garchi.co.uk/mcp-docs#claude-integration)
-3. [Lovable](https://garchi.co.uk/mcp-docs#lovable)
-4. [v0](https://garchi.co.uk/mcp-docs#v0)
-5. [VS Code Copilot](https://garchi.co.uk/mcp-docs#vscode)
-6. [Other clients](https://garchi.co.uk/mcp-docs#other-clients)
+2. [Claude Desktop](https://garchi.co.uk/mcp-docs#claude-desktop-integration)
+3. [Claude CLI](https://garchi.co.uk/mcp-docs#claude-cli-integration)
+4. [Lovable](https://garchi.co.uk/mcp-docs#lovable)
+5. [v0](https://garchi.co.uk/mcp-docs#v0)
+6. [VS Code Copilot](https://garchi.co.uk/mcp-docs#vscode)
+7. [Other clients](https://garchi.co.uk/mcp-docs#other-clients)
 
 
 After setting up the Garchi CMS MCP server you can add the skill by running the command below

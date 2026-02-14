@@ -50,6 +50,7 @@ Page can be created using the [API](https://garchi.co.uk/docs/v2#headless-web-PO
 
 The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section.
 
+When using Garchi Server MCP tools, add prop type of media so that it can support asset values.
 
 To upload assets:
 
@@ -60,14 +61,8 @@ To upload assets:
 5. To upload a file from third party resource or cloud hosted resource click on Upload using external url button. Enter the url.
 6. Click Save
 
-To edit an asset
 
-1. Click on the Pen or edit icon
-2. Change the details/file
-3. Click save.
-   
 
-To delete an asset click on a Trash Icon.
 
 ## Section Template
 
