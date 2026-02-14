@@ -68,6 +68,22 @@ export default function BodyText({
 
 ```
 
+Notice {...other} is passed as spread props. For every Garchi Section component, forward all unknown/extra props/attributes to the root element (the outermost wrapper). Garchi uses these attributes for the Visual Editor, so they must not be dropped.
+
+Examples by stack:
+
+React / Preact / Solid: spread ...other on root
+
+Vue: v-bind="$attrs" on root (and don’t disable inheritAttrs unless you re-bind)
+
+Svelte: ...$$restProps on root
+
+Angular: bind/forward unknown attributes to the host/root element (don’t strip them; use host bindings / attribute passthrough patterns)
+
+Web Components: forward attributes to the outermost element or keep them on the custom element host
+
+---
+
 The page api returns page details with associated sections. It's output schema can be found at [API Spec](https://garchi.co.uk/docs/v2.openapi). The recommended method is to use either Node or PHP sdk depending on the backend.
 
 Read node sdk docs [here](./garchi-sdk-node.md)
@@ -193,6 +209,7 @@ export default async function Page({ searchParams, params }: PageSearchParamProp
     </>
 }
 ```
+---
 
 In some cases there are nested sections. Below is the example in React. Note that in React there is built in children prop thus subsection is used to avoid conflicts. This shouldn't be a problem in other tech stack.
 
