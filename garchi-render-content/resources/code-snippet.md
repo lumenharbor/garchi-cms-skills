@@ -552,3 +552,63 @@ export async function GET(request: Request) {
 }
 
 ```
+
+
+## Good practices (Agent rules)
+
+### 1) Don’t change the snippets in this document
+- Treat every code block in this file as **reference code**. Do **not** rewrite or “improve” snippets unless explicitly asked.
+
+### 2) Recommended folder structure (keep CMS rendering isolated)
+Use a clear, repeatable layout so CMS rendering doesn’t sprawl across the app.
+
+**Example (Next.js / React):**
+- `src/components/garchi/`
+  - `GarchiSectionRenderer.tsx` (single dynamic renderer)
+  - `sections/` (all section components)
+    - `Navbar.tsx`
+    - `HeroContainer.tsx`
+    - `BodyText.tsx`
+    - `...`
+- `src/utils/garchi/` (SDK client + fetch helpers)
+- `src/lib/garchi/` (types, mappers, sanitizers, helpers)
+
+**Equivalent principle (other stacks):**
+- Put all “CMS section components” in one dedicated directory/module.
+- Keep the “section renderer / mapper” as a single entry point.
+- Keep SDK + data-fetch helpers in a dedicated `utils`/`services` area.
+
+### 3) Rendering HTML content
+Use Tailwind Typography plugin for proper rendering of HTML content/rich text fields. This is useful for data items content rendering. 
+
+
+### 4) Visual Editor compatibility: forward unknown props/attributes (required)
+Garchi CMS passes special attributes needed by the Visual Editor.  
+**For every section component, always forward unknown/extra props/attributes to the root element.**
+
+Framework-agnostic rule:
+- “Unknown props/attributes must be attached to the section’s outermost DOM element (or component host) without filtering.”
+
+Common patterns:
+- React / Preact / Solid: `...other` (rest props) spread on root
+- Vue: `v-bind="$attrs"` on root (and if `inheritAttrs: false`, re-bind manually)
+- Svelte: `...$$restProps` on root element
+- Angular: keep attributes on the host or pass-through via host bindings (don’t strip unknown attrs)
+- Web Components: keep attributes on the custom element host, or forward to the outer wrapper if using an internal root
+
+### 5) Rendering quality + stability
+- Use **stable keys** when rendering sections (prefer a section id/uid; avoid array index keys if possible).
+- Add a consistent “missing component” fallback that fails gracefully (and logs what’s missing).
+
+### 6) Data safety + security defaults
+- Sanitize any HTML before rendering (XSS prevention).
+- Keep API keys server-side only.
+- Validate preview mode tokens server-side and fail closed.
+
+### 7) Type safety + validation
+- Prefer typed section props (TypeScript types / interfaces).
+- Validate critical CMS payload shape at boundaries (runtime validation where helpful).
+
+### 8) Performance defaults
+- Cache or revalidate page fetches appropriately.
+- Avoid repeated “List assets / templates” calls in a single workflow (fetch once, reuse results).
