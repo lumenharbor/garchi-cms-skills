@@ -596,6 +596,11 @@ Common patterns:
 - Angular: keep attributes on the host or pass-through via host bindings (don’t strip unknown attrs)
 - Web Components: keep attributes on the custom element host, or forward to the outer wrapper if using an internal root
 
+If not using a starter kit, add this script tag to root layout of the app to have connection between the code and visual editor of Garchi CMS.
+```html
+<script src="https://garchi.co.uk/script/index.es.js" defer></script>
+```
+
 ### 5) Rendering quality + stability
 - Use **stable keys** when rendering sections (prefer a section id/uid; avoid array index keys if possible).
 - Add a consistent “missing component” fallback that fails gracefully (and logs what’s missing).
