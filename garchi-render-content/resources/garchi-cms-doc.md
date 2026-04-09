@@ -48,11 +48,11 @@ Page can be created using the [API](https://garchi.co.uk/docs/v2#headless-web-PO
 
 ## Assets
 
-The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section.
+The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section or AI tools could use UploadAssetTool of Garchi MCP server.
 
 When using Garchi Server MCP tools, add prop type of media so that it can support asset values.
 
-To upload assets:
+User can upload assets using Garchi CMS dashboard by following the steps below:
 
 1. Go to your Garchi CMS dashboard ---> Headless Web  ---> Assets in the sidebar.
 2. Click the "Add new asset" button.
