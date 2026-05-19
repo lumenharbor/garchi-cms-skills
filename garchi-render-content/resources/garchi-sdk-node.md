@@ -283,6 +283,7 @@ export type CreatePageRequest = {
     title: string;
     path: string;
     description: string;
+    agent_description?: string
 }
 ⋮----
 export type CreatePageResponse = {
@@ -291,6 +292,7 @@ export type CreatePageResponse = {
     path?: string;
     slug?: string;
     description: string;
+    agent_description?: string;
     image?: string;
     created_at?: string;
     last_updated?: string;
@@ -302,6 +304,7 @@ export type GarchiPage = {
     title: string
     slug: string
     description: string
+    agent_description?: string
     image?: string
     sections: GarchiSection[]
 }
@@ -326,7 +329,8 @@ export interface SectionTemplate {
   description?: string;               // Optional: Description of the section template
   prev_name?: string;                 // Optional: Previous name (for updating existing templates)
   props?: SectionTemplateProp[];
-  id?: string;     
+  id?: string; 
+  agent_description?: string;    
 }
 ⋮----
 name: string;                       // Name of the section template
@@ -422,6 +426,7 @@ export type GarchiSpace = {
     name: string
     logo_url?: string
     number_of_items: number
+    agent_description?: string; 
 }
 ⋮----
 export type GarchiSpaceCreate = {
@@ -436,6 +441,7 @@ export type GarchiItemMeta = {
     key: string;
     value: string;
     type: string;
+    agent_description?: string; 
 }
 ⋮----
 export type GarchiItem = {
@@ -461,6 +467,7 @@ export type GarchiItem = {
     reactions?: GarchiReaction[];
     created?: string;
     updated?: string;
+    agent_description?: string; 
 }
 ⋮----
 export type GarchiItemAPIResponse = PaginatedResponse<GarchiItem>
@@ -472,6 +479,7 @@ export type GarchiAsset = {
     path: string;
     size: string;
     type: string;
+    agent_description?: string; 
 }
 ⋮----
 export type GarchiCMSInitOptions = {
@@ -490,6 +498,7 @@ export interface CreateDataItemParams {
     detail_description?: string;
     external_url?: string;
     slug?: string;
+    agent_description?: string; 
 }
 ⋮----
 export interface DeleteDataItemParams {
@@ -510,6 +519,7 @@ export interface UpdateDataItemParams {
     external_url?: string;
     make_public?: boolean;
     slug?: string;
+    agent_description?: string; 
 }
 ⋮----
 export type MetaType = "string" | "array" | "url" | "object" | "numeric" | "email" | "date" | "color" | "icon_hero" | "icon_lucid";

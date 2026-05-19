@@ -26,6 +26,7 @@ public string $id;
 public string $path;
 public string $size;
 public string $type;
+public ?string $agent_description;
 ⋮----
 /**
      * GarchiAsset constructor.
@@ -86,6 +87,7 @@ class GarchiItem {
 public int $item_id;
 public string $slug;
 public ?string $sku;
+public ?string $agent_description;
 public string $name;
 public ?int $stock;
 /** @var GarchiCategory[] */
@@ -148,6 +150,7 @@ public ?int $id;
 public string $key;
 public string $value;
 public string $type;
+public ?string $agent_description;
 ⋮----
 /**
      * GarchiItemMeta constructor.
@@ -172,6 +175,7 @@ public string $title;
 public string $slug;
 public string $description;
 public string $image;
+public ?string $agent_description;
 /** @var GarchiSection[] */
 public array $sections;
 ⋮----
@@ -233,6 +237,7 @@ public array $props; // Associative array of properties
 /** @var GarchiSection[] */
 public array $children;
 public int $order;
+public ?string $agent_description;
 ⋮----
 public function __construct(array $data) {
 ```
