@@ -1,6 +1,6 @@
 {
   "name": "@garchicms/garchi-cms-skills",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Garchi CMS AI agent skills",
   "keywords": [
     "garchi",
@@ -14,7 +14,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "validate": "skills-ref validate ./garchi-cms-content"
+    "validate": "skills-ref validate ./garchi-render-content"
   },
   "dependencies": {
     "skills-ref": "^0.1.5"

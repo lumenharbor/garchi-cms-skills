@@ -92,7 +92,7 @@ Read PHP sdk docs [here](./garchi-sdk-php.md)
 A dynamic component as below can be used to render these components dynamically. This acts as section renderer for all the Garchi CMS pages.
 
 ```tsx
-// GarchiSectionRenderer.tsx
+// GarchiComponent.tsx
 
 import { GarchiSection } from '@garchicms/garchi-node-sdk'
 import dynamic from 'next/dynamic'
@@ -102,7 +102,7 @@ type Props = {
     section: GarchiSection
 }
 
-export default function GarchiSectionRenderer({ section }: Props) {
+export default function GarchiComponent({ section }: Props) {
 
     if (!section)
         return <></>
@@ -169,7 +169,7 @@ Now using this util a page can be rendered.
 ```tsx
 // app/[slug]/page.tsx
 
-import GarchiSectionRenderer from "@/components/garchi/GarchiSectionRenderer"
+import GarchiComponent from "@/components/garchi/GarchiComponent"
 import { PageSearchParamProps, PageParams } from "@/interface/page"
 
 import { getPage } from "@/utils/garchi"
@@ -204,7 +204,7 @@ export default async function Page({ searchParams, params }: PageSearchParamProp
   return (
     <>
       {page?.sections?.map((section, index) => (
-        <GarchiSectionRenderer key={index} section={section} />
+        <GarchiComponent key={section.id} section={section} />
       ))}
     </>
 }
@@ -271,7 +271,7 @@ import { Heading } from '../common/Typography';
 import Markdown from '../common/Markdown';
 import { GarchiSection } from '@garchicms/garchi-node-sdk';
 import { motion } from 'framer-motion';
-import GarchiSectionRenderer from "@/components/garchi/GarchiSectionRenderer"
+import GarchiComponent from "@/components/garchi/GarchiComponent"
 
 type Props = {
     title: string;
@@ -322,7 +322,7 @@ export default function TextWithStat({ title, description, subsections, ...props
                     >
                         <dl className="w-64 space-y-8 xl:w-80">
                             {subsections.map((section, index) => (
-                                 <GarchiSectionRenderer key={index} section={section} />
+                                 <GarchiComponent key={section.id} section={section} />
                             ))}
                         </dl>
                     </motion.div>
@@ -415,7 +415,7 @@ export default async function Page({params}: PageParams) {
   const page = await getPage("/", "draft")
   const footerProps = page?.sections.find(section => section.name == "Footer")?.props
 
-  const posts = await getBlogPosts(page)
+  const posts = await getBlogPosts(Number(pageNumber))
 
   if(posts?.data.length === 0)
     return redirect("/blog")
@@ -517,6 +517,53 @@ export default async function Page({ params }: PageParams) {
 As the description of each data item in this case blog post is HTML, make sure to sanitise it to avoid xss attack.
 
 
+## Shared helpers and atoms
+
+The snippets above reference a few small helpers/atoms. **If the project already has equivalents (a Markdown/HTML sanitizer, a typography component), mirror and use those instead of adding new ones or new dependencies.**
+
+### Markdown / rich-text renderer (sanitize HTML)
+
+Data item `description` and section `richtext` props are HTML, so **always sanitize before rendering** to prevent XSS. Reference implementation in React using DOMPurify — mirror the project's existing sanitizing component if one exists (it may be named `Markdown`, `MarkdownRenderer`, etc.):
+
+```tsx
+// components/common/Markdown.tsx  (referenced as MarkdownRenderer in some snippets — same atom)
+import DOMPurify from "isomorphic-dompurify"
+
+type Props = {
+    content: string
+    className?: string
+    [key: string]: unknown // forward Visual Editor attrs to the root
+}
+
+export default function Markdown({ content, className, ...other }: Props) {
+    const clean = DOMPurify.sanitize(content ?? "")
+    return (
+        <div
+            className={className}
+            dangerouslySetInnerHTML={{ __html: clean }} // content is sanitized above
+            {...other}
+        />
+    )
+}
+```
+
+Pair with the Tailwind Typography plugin (`prose` classes) for readable output. In other stacks use the equivalent sanitized-HTML mechanism (Vue `v-html` on an already-sanitized string, Blade with a server-side HTML purifier, etc.) — never render raw CMS HTML unsanitized.
+
+### Flatten item meta for O(1) access
+
+```ts
+import { GarchiItem, GarchiItemMeta } from "@garchicms/garchi-node-sdk"
+
+export function flattenGarchiItemMeta(item: GarchiItem): Record<string, string> {
+    return (item.item_meta ?? []).reduce((acc, meta: GarchiItemMeta) => {
+        acc[meta.key] = meta.value
+        return acc
+    }, {} as Record<string, string>)
+}
+```
+
+`Heading` in the snippets is a thin typography atom (an `h1..h6` wrapper) — use the project's existing one or a plain element.
+
 ## Preview mode.
 
 To enable preview mode, first check if user has provided the preview token.
@@ -564,7 +611,7 @@ Use a clear, repeatable layout so CMS rendering doesn’t sprawl across the app.
 
 **Example (Next.js / React):**
 - `src/components/garchi/`
-  - `GarchiSectionRenderer.tsx` (single dynamic renderer)
+  - `GarchiComponent.tsx` (single dynamic renderer)
   - `sections/` (all section components)
     - `Navbar.tsx`
     - `HeroContainer.tsx`
