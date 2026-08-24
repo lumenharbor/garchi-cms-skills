@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "garchi": {
+    "Garchi CMS": {
       "type": "http",
       "url": "https://garchi.co.uk/mcp-oauth"
     }
