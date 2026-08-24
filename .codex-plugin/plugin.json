@@ -1,0 +1,45 @@
+{
+  "name": "garchi-cms",
+  "version": "3.0.1",
+  "description": "Build and manage structured websites and applications with Garchi CMS using AI agents, official starter kits and a production MCP integration.",
+  "author": {
+    "name": "LumenHarbor Digital Solutions Limited",
+    "email": "support@lumenharbor.co.uk",
+    "url": "https://lumenharbor.co.uk"
+  },
+  "homepage": "https://garchi.co.uk",
+  "repository": "https://github.com/lumenharbor/garchi-cms-skills",
+  "license": "MIT",
+  "keywords": [
+    "garchi",
+    "cms",
+    "headless-cms",
+    "structured-content",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Garchi CMS",
+    "shortDescription": "Structured content backend for sites and apps built by AI agents.",
+    "longDescription": "Garchi CMS is a headless CMS for structured content: spaces, pages built from reusable section templates, data items with categories and metadata, and assets. This plugin bundles three skills \u2014 orchestrating a build, rendering Garchi content in a frontend, and operating content over MCP \u2014 together with the hosted Garchi MCP server so the agent can read and write the user's live content.",
+    "developerName": "LumenHarbor Digital Solutions Limited",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://garchi.co.uk",
+    "privacyPolicyURL": "https://garchi.co.uk/privacy_policy",
+    "termsOfServiceURL": "https://garchi.co.uk/website_terms_and_conditions",
+    "defaultPrompt": [
+      "Build a marketing site with Garchi CMS as the content backend.",
+      "Create the About and Pricing pages in my Garchi space.",
+      "Render my Garchi pages in this frontend."
+    ],
+    "brandColor": "#0F172A",
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png"
+  }
+}

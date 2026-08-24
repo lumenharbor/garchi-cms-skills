@@ -8,7 +8,7 @@ The SDK is a thin wrapper over the REST API [documented here](https://garchi.co.
 Install the SDK using composer:
 
 ```bash
-composer require garchicms/garchi-php-sdk
+composer require garchicms/garchi-sdk-php
 ```
 
 

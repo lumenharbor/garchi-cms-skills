@@ -1,6 +1,6 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "garchi-cms",
-  "displayName": "Garchi CMS",
   "version": "3.0.1",
   "description": "Build and manage structured websites and applications with Garchi CMS using AI agents, official starter kits and a production MCP integration.",
   "author": {
@@ -16,7 +16,9 @@
     "cms",
     "headless-cms",
     "structured-content",
-    "mcp"
-  ],
-  "mcpServers": "./.mcp.json"
+    "mcp",
+    "nextjs",
+    "nuxt",
+    "laravel"
+  ]
 }

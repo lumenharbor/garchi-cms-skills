@@ -48,7 +48,7 @@ Page can be created using the [API](https://garchi.co.uk/docs/v2#headless-web-PO
 
 ## Assets
 
-The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section or AI tools could use UploadAssetTool of Garchi MCP server.
+The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section or AI tools could use upload-asset-tool of Garchi MCP server.
 
 When using Garchi Server MCP tools, add prop type of media so that it can support asset values.
 
@@ -97,9 +97,9 @@ function TeamCard({image, title, name})
 
 The Section template named TeamCard needs to be created in Garchi CMS. In this case TeamCard template has prop template of three props. image of type media, title and name of type text.
 
-Now TeamCard template can be used as a reusable section across page/s and the content for it can either be managed from Garchi CMS dashboard or by using MCP tool create-section-content-tool. 
+Now TeamCard template can be used as a reusable section across page/s and the content for it can either be managed from Garchi CMS dashboard or by using MCP tool upsert-section-content-tool. 
 
-Each section can also have nested sections. Each section's content is added individually using the MCP tool of create-section-content-tool.
+Each section can also have nested sections. Each section's content is added individually using the MCP tool of upsert-section-content-tool.
 
 
 
@@ -153,12 +153,12 @@ The Item API returns metadata in the item_meta array:
  "item_meta": [
           {
               "key" : "website",
-              "value": "https://adiranids.com",
+              "value": "https://example.com",
               "type": "url"
           },
           {
               "key" : "linkedin",
-              "value": "https://linkedin.com/adiranids",
+              "value": "https://linkedin.com/in/example",
               "type": "url"
           },
      ],
@@ -188,7 +188,7 @@ const flattenedMeta = item.item_meta.reduce((obj, meta) => {
 let website = flattenedMeta.website
 
 // console.log(flattenedMeta)
-//{website: "https://adiranids.com", linkedin:"https://linkedin.com/adiranids"}
+//{website: "https://example.com", linkedin:"https://linkedin.com/in/example"}
 
 ```
 
@@ -202,9 +202,11 @@ This preserves the original metadata structure while optimizing access.
 ## Data item images
 
 Each data items can have one main image generally used as a featured image and up to 8 additional images.
-Each image needs to be uploaded manually using the Garchi CMS dashboard.
+Data item images are supplied on the item itself, not from the space's assets. Assets are for page sections only.
 
-Images can be added by visit Garchi CMS dashboard ---> click on Manage --> Add Images
+Images can be added by visiting Garchi CMS dashboard ---> click on Manage --> Add Images
+
+Over the API, SDK or MCP they are passed inline as base64 strings on the item, the first one becoming the featured image. The MCP tool `generate-image-tool` with `image_for: data_item` can also set an item's main image directly.
 
 
 ## Item options (E-commerce only feature)
@@ -244,7 +246,7 @@ Categories can be managed using the API, SDK or using the MCP tool manage-catego
 
 - OpenAPI specification for Garchi CMS can be found at [https://garchi.co.uk/docs/v2.openapi](https://garchi.co.uk/docs/v2.openapi)
 
-- Garchi CMS has SDKs for Node and PHP. It got starter kits for Next, Nuxt, Laravel and SvelteKit. Starter kits can be installed using command `npx @lumenharbor/garchi-starter-kit -k next` replacing next with nuxt, laravel or sveltekit as per your requirements. For a fresh project a starter kit is recommended. Starter kits uses Tailwind CSS for styling and have example components to render pages. Starter kits come with respective SDKs and .env files.
+- Garchi CMS has SDKs for Node and PHP. It has starter kits for Next, Nuxt and Laravel. Starter kits can be installed using the command `npx @lumenharbor/garchi-starter-kit -k next`, replacing next with nuxt or laravel as per your requirements. For a fresh project on one of those frameworks a starter kit is recommended. Starter kits use Tailwind CSS for styling and have example components to render pages. Starter kits come with respective SDKs and .env files. Any other framework integrates through the SDKs or the REST API instead.
 
 
 

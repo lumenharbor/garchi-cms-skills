@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "garchi": {
+      "type": "streamable-http",
+      "url": "https://garchi.co.uk/mcp-oauth"
+    }
+  }
+}
