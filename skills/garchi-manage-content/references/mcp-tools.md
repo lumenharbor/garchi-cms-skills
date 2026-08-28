@@ -83,7 +83,9 @@ language variant.
 `json_ld` is emitted as structured data. Counts against the plan's page limit.
 
 **`update-page-tool`** (`id`, `space_uid`, plus any of `title`, `description`,
-`path`, `json_ld`, `agent_description`) — page-level fields, including SEO.
+`path`, `json_ld`, `agent_description`) — page-level fields, including SEO. Only
+the fields you send are written; sending one as `null` clears it, and `title`,
+`description` and `path` cannot be emptied because the page requires them.
 Changing `path` changes the page's URL, so check what links to it first.
 
 ## Sections
@@ -103,8 +105,10 @@ props sent are written, props omitted are untouched. Each `props` entry takes
 the skill. Send every prop for a section in one call. An `asset_id` must belong
 to the same space; one from another space is rejected.
 
-Removing an image is an explicit `asset_id: null` on that prop — omitting the
-prop leaves the current image in place, because omitted props are untouched.
+Removing an image is an explicit `asset_id: null` on that prop, and blanking a
+text prop is an explicit `value: ""` — omitting a prop leaves it in place,
+because omitted props are untouched. A `select` prop can be blanked the same way,
+and only a non-empty value is checked against `allowed_values`.
 
 **This puts the page back into draft.** `mode=live` keeps serving the last
 published version, so the live site stays intact — and the change is invisible
@@ -170,8 +174,10 @@ The result carries `published` and `scheduled_for` so you can confirm the state
 and say so.
 
 **`update-data-item-tool`** (`item_id`, `space_uid`, plus any creatable field) —
-same fields, all optional. An updated item stays a draft unless the user has
-already published it; it does not publish itself.
+same fields, all optional. Only the fields you send are written, and they are
+written as given: `stock: 0`, `price: 0` and an empty `one_liner` all land rather
+than being ignored. An updated item stays a draft unless the user has already
+published it; it does not publish itself.
 
 **`list-categories-tool`** (`space_uid`) — categories in the space.
 

@@ -76,6 +76,11 @@ Two id traps worth knowing:
 `upsert-section-content-tool` merges by prop template id. Props you send are
 written; props you omit are left untouched. Send only what changes.
 
+That is the contract for every Garchi write, not just this one: **only what you
+provide changes.** A field or prop sent as `null` or `""` means "empty this"; one
+you leave out keeps its current value. So blanking a heading or removing an
+image is an explicit empty value, never an omission.
+
 Each entry in `props` needs the prop template `id` plus **either** `value`
 **or** `asset_id`, decided by the prop's type:
 
@@ -83,7 +88,7 @@ Each entry in `props` needs the prop template `id` plus **either** `value`
 | --- | --- |
 | `media` | `asset_id` from `list-assets-tool`, in the same space. `value` is ignored. Send `asset_id: null` to remove the current image. |
 | `select` | `value`, and it must be one of that prop's `allowed_values`. |
-| `text`, `longtext`, `richtext`, `date` | `value` as a string. |
+| `text`, `longtext`, `richtext`, `date` | `value` as a string. Send `""` to blank it. |
 | `icon_lucid`, `icon_hero` | `value` = an icon name from that icon library. |
 
 Sending `asset_id` for a non-media prop is rejected, and so is omitting it for a
