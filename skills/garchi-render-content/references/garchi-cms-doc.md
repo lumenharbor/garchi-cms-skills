@@ -42,7 +42,9 @@ Space allow you to organize your Garchi CMS data into separate work areas. For e
 
 Pages are the building blocks of your website. They are made up of sections, which are created using section templates. You can create as many pages as you need in your Space, and each page can have its own unique content.
 
-Each page maps to Page component in your codebase. Generally a dynamic route is preferred if the framework being used (Next, Nuxt etc.) supports it. Pages are fetched using the slug (eg: /about, /contact-us), space uid and mode (live,draft). 
+Each page maps to Page component in your codebase. Generally a dynamic route is preferred if the framework being used (Next, Nuxt etc.) supports it. Pages are fetched using the slug (eg: /about, /contact-us), space uid and mode (live,draft).
+
+Any content change puts a page back into draft. `live` keeps serving the last published version until the owner publishes again, so an application rendering `live` never shows a half-finished edit — and equally does not show a change until it is published. Rendering `draft` needs the space's preview token. 
 
 Page can be created using the [API](https://garchi.co.uk/docs/v2#headless-web-POSTapi-v2-space--uid--create_page), using the SDK or using the MCP tool create-page-tool.
 
@@ -99,7 +101,7 @@ The Section template named TeamCard needs to be created in Garchi CMS. In this c
 
 Now TeamCard template can be used as a reusable section across page/s and the content for it can either be managed from Garchi CMS dashboard or by using MCP tool upsert-section-content-tool. 
 
-Each section can also have nested sections. Each section's content is added individually using the MCP tool of upsert-section-content-tool.
+Each section can also have nested sections, up to 5 levels deep. Each section's content is added individually using the MCP tool of upsert-section-content-tool.
 
 
 
@@ -131,6 +133,10 @@ The base item schema also includes ecommerce fields for data items that are sell
 
  
 
+
+Data items are created and updated as drafts. The content API serves published items only, so a newly written item does not appear in an application until a human publishes it in the Garchi dashboard — or until the time set in its `scheduled_for_datetime`, when Garchi publishes it automatically. An application listing items therefore only ever sees published ones.
+
+`sku` is unique within the space, and `price` accepts decimal values.
 
 You can extend the schema by adding **extra details** as custom key-value pairs.
 

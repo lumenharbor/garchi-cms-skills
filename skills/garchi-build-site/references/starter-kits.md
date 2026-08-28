@@ -61,9 +61,12 @@ runtimeConfig: {
 },
 ```
 
-Where to find the values: API key → dashboard, Settings → API Keys. Space UID →
-dashboard, on the space. Preview token → Space Settings; it enables rendering
-unpublished (`draft`) content.
+Where to find the values: API key → dashboard, Settings → API Keys. The key belongs
+to the **account**, not to a space, and covers every space the account owns (up to five
+keys per account), so the user may already have one. Space UID → dashboard, on the
+space; this is what scopes a request to a space, not the key. Preview token → Space
+Settings; this one **is per space**, and it enables rendering unpublished (`draft`)
+content.
 
 All of these are server-side only. None of them may be exposed to the browser
 or committed to the repository.

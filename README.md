@@ -187,10 +187,10 @@ for those, but Garchi works the same way behind them.
   nothing else.
 - **Your Garchi permissions govern access.** The MCP server acts as the signed-in
   user. The plugin grants no access beyond what that account already has.
-- **Destructive actions are confirmed.** `delete-section-tool` is the only
-  destructive tool in the server's inventory, and
+- **Destructive actions are confirmed.** Two tools are marked destructive —
+  `delete-section-tool` and `update-prop-template-tool` — and
   [`garchi-manage-content`](skills/garchi-manage-content) requires an explicit,
-  per-item confirmation before it runs, on top of your client's own tool
+  per-item confirmation before either runs, on top of your client's own tool
   approval prompts.
 - **Application credentials stay server-side.** The `GARCHI_API_KEY` used by
   your app to read content is separate from MCP, is never exposed to the

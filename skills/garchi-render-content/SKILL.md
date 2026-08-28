@@ -25,10 +25,10 @@ Confirm these exist before writing fetch code (starter kits create them for you)
 
 | Env var | Purpose | Required |
 | --- | --- | --- |
-| `GARCHI_API_KEY` | Space API key used to authenticate all API/SDK calls | Yes |
+| `GARCHI_API_KEY` | Account API key used to authenticate all API/SDK calls. Account-level, not space-level: one key covers every space the account owns | Yes |
 | `GARCHI_SPACE_UID` | Target space UID passed to most calls | Yes |
 | `GARCHI_API_URL` | API base, `https://garchi.co.uk/api/v2` | Yes |
-| `GARCHI_PREVIEW_TOKEN` | Enables draft/preview mode (Space Settings → Preview Token) | Only if preview is needed |
+| `GARCHI_PREVIEW_TOKEN` | Enables draft/preview mode. Per space (Space Settings → Preview Token) | Only if preview is needed |
 
 Nuxt keeps these values in `runtimeConfig` in `nuxt.config.ts` rather than in a
 `.env` file. Match whatever the project already uses rather than introducing a
@@ -100,6 +100,12 @@ Read only what the current task needs. Do **not** fetch the full OpenAPI spec up
 - Pages/data items render correctly in the chosen stack.
 - Visual Editor attributes are preserved on all section components.
 - Preview/draft mode works (if required).
+
+**If a page or item renders empty in `live`, check whether it is published before
+debugging the code.** Garchi serves published content only: page content writes put the
+page back into draft, and data items are created unpublished, so freshly authored content
+is missing from `live` by design until the user publishes it in the dashboard. Fetch the
+same content in `draft` mode to confirm it exists.
 - Errors are handled without infinite retries/loops.
 - HTML content is sanitized where applicable.
 - No content that belongs in Garchi is hard-coded in components.

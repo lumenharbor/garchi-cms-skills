@@ -83,10 +83,10 @@ Confirm with the user which space, then have them supply:
 
 | Variable | Purpose |
 | --- | --- |
-| `GARCHI_API_KEY` | Space API key (dashboard → Settings → API Keys) |
+| `GARCHI_API_KEY` | Account API key (dashboard → Settings → API Keys). It belongs to the account, not a space, and covers every space that account owns |
 | `GARCHI_SPACE_UID` | Target space UID |
 | `GARCHI_API_URL` | `https://garchi.co.uk/api/v2` |
-| `GARCHI_PREVIEW_TOKEN` | Only if draft/preview rendering is needed |
+| `GARCHI_PREVIEW_TOKEN` | Per space (Space Settings). Only if draft/preview rendering is needed |
 
 Exact names vary slightly per starter kit — check
 [starter-kits.md](./references/starter-kits.md). The key is **server-side
@@ -118,6 +118,12 @@ Run the project's own dev server / test command and check that real content
 renders: at least one page with sections, and one data-item listing if the
 project has one. Fix missing-component fallbacks and unsanitized HTML.
 
+Anything authored in step 9 is a **draft**: page writes put the page back into
+draft and new data items are unpublished, and `live` serves published content
+only. So test against `draft` (with the preview token), and expect an empty or
+stale `live` result until the user publishes. That is correct behaviour, not a
+bug in the integration.
+
 ### 11. Verify the content/code separation
 This is the acceptance test for the whole job. Confirm that:
 - Copy, headings, images and lists come from Garchi props or item fields — not
@@ -137,6 +143,8 @@ Report anything you had to hard-code and why.
 - Do not add dependencies beyond the Garchi SDK unless the user asks.
 - Do not modify application source code to change business content — change it
   in Garchi instead.
+- Agents write drafts; the user publishes. When you finish, list the pages and
+  items you created or changed and tell them to publish those in the dashboard.
 - If something cannot be determined from the repository, the space, or the
   official Garchi docs, say so rather than inventing it.
 

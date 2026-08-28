@@ -81,7 +81,7 @@ Each entry in `props` needs the prop template `id` plus **either** `value`
 
 | Prop type | What to send |
 | --- | --- |
-| `media` | `asset_id` from `list-assets-tool`. `value` is ignored. |
+| `media` | `asset_id` from `list-assets-tool`, in the same space. `value` is ignored. Send `asset_id: null` to remove the current image. |
 | `select` | `value`, and it must be one of that prop's `allowed_values`. |
 | `text`, `longtext`, `richtext`, `date` | `value` as a string. |
 | `icon_lucid`, `icon_hero` | `value` = an icon name from that icon library. |
@@ -119,17 +119,23 @@ This is what "move that section up" means; it is not a delete-and-recreate.
    `action: create` if needed). An item needs at least one.
 2. `list-item-meta-tool` → what keys and types similar items already use.
 3. `create-data-item-tool` → `name`, unique `slug`, `categories`,
-   `detail_description` (the HTML body), optional `one_liner`, and `price` /
-   `stock` / `sku` only for sellable items.
+   `detail_description` (the HTML body), optional `one_liner` (a one line
+   summary, max 1000 chars), optional `scheduled_for_datetime`, and `price`
+   (decimals allowed) / `stock` / `sku` only for sellable items. `sku` is unique
+   within the space.
 4. `create-meta-for-item-tool` per extra field, reusing the keys and types from
    step 2.
-5. `get-data-item-tool` → verify.
+5. `get-data-item-tool` → verify. The result carries `published`, which will be
+   false.
+6. Tell the user the item is a draft and needs publishing in the dashboard.
 
 **Images** — two different systems, do not mix them:
 - *Page sections* use space assets. `list-assets-tool` to find one,
-  `upload-asset-tool` to add one, then set the `media` prop by `asset_id`.
-- *Data items* take images **inline as base64** on the item itself, first image
-  being the featured one. Data items never use space assets.
+  `upload-asset-tool` to add one, then set the `media` prop by `asset_id`. The
+  asset must belong to the same space; an id from another space is rejected.
+- *Data items* take images **inline as base64 data URIs** on the item itself,
+  first image being the featured one — `png`, `jpg`, `jpeg`, `webp` or
+  `svg+xml`, max 10 MB each. Data items never use space assets.
 - `generate-image-tool` covers both: `image_for: page` returns an `asset_id` to
   use in a section prop; `image_for: data_item` needs a `data_item_id` and sets
   that item's main image directly.
@@ -151,19 +157,32 @@ reads instead of guessing. Fill it in whenever you create something.
 
 ## Draft, live, and what MCP cannot do
 
-Page edits are written to the **draft** version. Verify with `mode=draft`;
-asking for `live` on unpublished work returns "no published version". Use
-`mode=live` only to answer what visitors currently see. Rendering drafts in an
-application needs a preview token — see `garchi-render-content`.
+**You write drafts. A human publishes.** Nothing here reaches the live site on
+its own, and that review step is the point: the user sees the change before
+their visitors do.
 
-Data items have no draft state. Once created or updated they are immediately
-readable through the space's content API.
+**Pages.** Every content write puts the page back into draft. Verify with
+`mode=draft`. `mode=live` keeps serving the last published version, so the site
+never shows a half-finished edit — and your change is not visible until the
+owner publishes again. A page that has never been published returns "no
+published version" on `live`. Rendering drafts in an application needs a preview
+token — see `garchi-render-content`.
+
+**Data items.** New and updated items are drafts (`published: false`), and the
+content API serves published items only, so a fresh item is not on the site yet.
+The exception is `scheduled_for_datetime` (`Y-m-d H:i`, in the future): the item
+stays a draft until that time, then Garchi publishes it automatically.
+
+**End every content task by saying what you changed and that the user needs to
+publish it in the dashboard.** Reading your work back over MCP shows drafts, so
+a clean verification is not evidence that anything is live.
 
 Several things are deliberately outside this server. Tell the user to do them in
 the Garchi dashboard rather than looking for a tool:
 
 - **Creating a space.** No tool creates one.
-- **Publishing a page.** Draft changes go live only when the owner publishes.
+- **Publishing a page or a data item.** Both go live only when the owner
+  publishes them in the dashboard.
 - **Deleting pages, data items, categories or section templates.**
   `delete-section-tool` is the only delete here, and `manage-category-tool` only
   creates and updates.

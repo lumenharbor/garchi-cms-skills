@@ -67,12 +67,14 @@ one in the dashboard.
 ## Pages
 
 **`list-pages-tool`** (`space_uid`) — every page in the space, with the
-`page_id` that the section tools require.
+`page_id` that the section tools require, plus each page's `is_published`
+state — false means it has unpublished changes waiting for the owner.
 
 **`get-page-tool`** (`space_uid`, `slug`, `mode`, `lang?`) — one page with its
 full section tree, section ids and current prop values. `slug` is the URL path
-(`/`, `/about`), **not** an id. `mode` is required and is `draft` or `live`; a
-page with unpublished changes only resolves under `draft`. `lang` selects a
+(`/`, `/about`), **not** an id. `mode` is required and is `draft` or `live`.
+Unpublished changes only appear under `draft`; `live` returns the last published
+version, or errors when the page has never been published. `lang` selects a
 language variant.
 
 **`create-page-tool`** (`space_uid`, `title`, `description`, `path`, `json_ld?`,
@@ -91,13 +93,22 @@ a top-level section instantiating a template. Returns the new section's `id`,
 `order`, `page_id` and template details. Adds no content.
 
 **`create-nested-section-tool`** — same, plus `parent_id`. Use this, not
-`create-section-tool`, when placing a section inside another.
+`create-section-tool`, when placing a section inside another. Sections nest up
+to 5 levels deep.
 
 **`upsert-section-content-tool`** (`space_uid`, `page_id`, `section_id`,
 `props[]`, `language_id?`) — sets prop values. Merges by prop template id:
 props sent are written, props omitted are untouched. Each `props` entry takes
 `id` (the prop template id) plus `value` or `asset_id` per the type contract in
-the skill. Send every prop for a section in one call.
+the skill. Send every prop for a section in one call. An `asset_id` must belong
+to the same space; one from another space is rejected.
+
+Removing an image is an explicit `asset_id: null` on that prop — omitting the
+prop leaves the current image in place, because omitted props are untouched.
+
+**This puts the page back into draft.** `mode=live` keeps serving the last
+published version, so the live site stays intact — and the change is invisible
+to visitors until the owner republishes. Say so when you finish.
 
 **`change-section-rank-tool`** (`space_uid`, `page_id`, `section_id`,
 `new_index`) — moves a top-level section to a new zero-based position.
@@ -141,15 +152,26 @@ matching component prop until the code is updated.
 numeric.
 
 **`create-data-item-tool`** (`space_uid`, `name`, `slug`, `categories[]`,
-`detail_description`, plus optional `agent_description`, `sku`, `stock`,
-`price`, `images[]`) — `slug` is unique in the space. `detail_description` is
-the HTML body. `categories` needs at least one valid id. `sku`/`stock`/`price`
-apply only to sellable items. `images` are base64 strings or data URIs, the
-first becoming the featured image — data items never use space assets. Counts
-against the plan's item limit.
+`detail_description`, plus optional `one_liner`, `agent_description`, `sku`,
+`stock`, `price`, `images[]`, `scheduled_for_datetime`) — `slug` is unique in
+the space. `detail_description` is the HTML body; `one_liner` is a one line
+summary, max 1000 characters. `categories` needs at least one valid id.
+`sku`/`stock`/`price` apply only to sellable items: `price` accepts decimals
+(`19.99`) and `sku` is unique **within the space**, so the same sku may exist in
+another space. `images` are base64 data URIs — `png`, `jpg`, `jpeg`, `webp` or
+`svg+xml`, max 10 MB each — the first becoming the featured image; data items
+never use space assets. Counts against the plan's item limit.
+
+**The item is created as a draft** (`published: false`) and the content API
+serves published items only, so it is not on the user's site yet. Pass
+`scheduled_for_datetime` (`Y-m-d H:i`, in the future) to have Garchi publish it
+automatically at that time; otherwise the user publishes it in the dashboard.
+The result carries `published` and `scheduled_for` so you can confirm the state
+and say so.
 
 **`update-data-item-tool`** (`item_id`, `space_uid`, plus any creatable field) —
-same fields, all optional.
+same fields, all optional. An updated item stays a draft unless the user has
+already published it; it does not publish itself.
 
 **`list-categories-tool`** (`space_uid`) — categories in the space.
 
@@ -180,6 +202,9 @@ string; `type` says how to read it:
 so pick an id from it directly and never loop. Clients that support MCP UI also
 show the user a gallery of the same assets; if the user picks some, their ids
 arrive as a follow-up message.
+
+Assets belong to the space that owns them: `upsert-section-content-tool` rejects
+an `asset_id` from a different space.
 
 **`upload-asset-tool`** (`space_uid`, `file_name`, `file_type`,
 `file_raw_content?`, `agent_description?`) — `file_type` must be an allowed MIME
@@ -230,8 +255,9 @@ guidance for that combination.
 ## What the server will not do
 
 - Create a space.
-- Publish a page — draft changes go live only when the owner publishes them in
-  the dashboard.
+- Publish anything. Page content writes put the page back into draft, and data
+  items are created and updated as drafts; both go live only when the owner
+  publishes them in the dashboard. Say what needs publishing when you finish.
 - Delete a page, data item, category or section template.
 - Restore anything. Garchi keeps automatic restore points for recent page,
   section-template and data item changes, available from the content history in
