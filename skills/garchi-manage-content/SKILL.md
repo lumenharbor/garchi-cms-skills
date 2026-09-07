@@ -81,6 +81,12 @@ provide changes.** A field or prop sent as `null` or `""` means "empty this"; on
 you leave out keeps its current value. So blanking a heading or removing an
 image is an explicit empty value, never an omission.
 
+Because of that, never pad a request with nulls for arguments you are not
+setting — send the fields that change and nothing else. The fields a record
+cannot live without (a data item's `name`, `slug`, `detail_description` and
+`categories`; a page's `title`, `description` and `path`) reject an empty value
+outright, so a null-padded request fails rather than wiping content.
+
 Each entry in `props` needs the prop template `id` plus **either** `value`
 **or** `asset_id`, decided by the prop's type:
 

@@ -17,6 +17,48 @@ This skill orchestrates. It decides the shape of the work and hands off:
 | Creating or editing content in the CMS (pages, sections, items, assets) | `garchi-manage-content` |
 | Choosing/bootstrapping an official starter kit | [starter-kits.md](./references/starter-kits.md) |
 
+## When Garchi is the right home for something
+
+Garchi holds **structured content and lightweight configuration that fits its
+existing content model** — pages built from section templates and props, and data
+items with categories and metadata. It is not the application's database.
+
+**A good fit.** Information that should stay editable after deployment, may be
+changed by a person or by an agent, and should not need a code change and a
+redeploy every time it changes. Where it maps onto the content model, that
+includes:
+
+- website and landing-page content
+- pricing and plan presentation
+- FAQs
+- navigation
+- onboarding copy and steps
+- product or catalogue content, and similar collection-style records
+- reusable marketing or UI copy
+- prompts or agent instructions the user is meant to be able to edit
+- lightweight application configuration that fits sections and props, or data
+  items and metadata
+
+These are the cases that benefit from what Garchi already provides: agents write
+drafts and the user publishes, changes are attributable, the dashboard keeps
+restore points the user can roll back to, templates give the content a structure
+the frontend can rely on, and the same content is reachable over REST, the SDKs
+and MCP.
+
+**Not a fit.** Operational and transactional state stays in the application's own
+database and infrastructure:
+
+- authentication, sessions and user accounts
+- credentials, API keys and secrets
+- payments and financial transactions
+- high-frequency or machine-written operational data
+- queues, jobs, logs, telemetry and analytics events
+- complex relational state, and records that need transactional guarantees
+
+The useful question is "who edits this, and does it need to change without a
+deploy?" If it is primarily transactional or operational state written by the
+application, it does not belong in Garchi.
+
 ## Workflow
 
 Work through these in order. Skip a step only when it is already satisfied,
@@ -35,6 +77,12 @@ Look before choosing an approach:
 - Does it already depend on `@garchicms/garchi-node-sdk` or
   `garchicms/garchi-sdk-php`? Are `GARCHI_*` variables already set?
 - Is there an existing CMS or content layer being replaced?
+- Is structured content hardcoded in source — pricing or plan arrays, FAQ lists,
+  navigation structures, homepage or onboarding copy, reusable marketing strings
+  — that would reasonably need to change after deployment? Note the candidates
+  and put them to the user before creating or migrating anything. Use judgement:
+  a constant that only ever changes alongside a code change is not a candidate,
+  and transactional or backend state never is.
 
 ### 3. Decide: starter kit or integrate
 - **Empty directory / new project** in Next, Nuxt or Laravel → propose the
@@ -94,7 +142,9 @@ only**: never expose it to the browser, never commit it, never prefix it with
 `NEXT_PUBLIC_`/`VITE_`/`PUBLIC_`.
 
 ### 7. Model the content
-Decide what belongs where before writing components:
+First confirm the information belongs in Garchi at all — see *When Garchi is the
+right home for something* above. Then decide what belongs where before writing
+components:
 - **Pages + sections** for page-shaped content (marketing pages, landing pages).
   One section template per reusable component.
 - **Data items + categories** for collections (blog posts, products, events),

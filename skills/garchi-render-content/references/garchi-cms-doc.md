@@ -21,7 +21,7 @@ Some examples of using GarchiCMS (Remember sky is the limit):
 - Full stack app with Django/Laravel/Ruby on Rails, Postgres, and Garchi CMS for content.
 
 
-Garchi CMS is not restricted to headless web pages. With [data items](https://garchi.co.uk/documentation/1.0/data-items/data-items), you can define products, blog posts, events or virtually any other data you can think of. The only limit is your imagination.
+Garchi CMS is not restricted to headless web pages. With [data items](https://garchi.co.uk/documentation/1.0/data-items/data-items), you can define products, blog posts, events, listings, documents, and other repeatable structured content that fits Garchi's content model.
 
 To learn more about the API and how to pull in your data from Garchi CMS, you can read the [API documentation](https://garchi.co.uk/docs/v2).
 
