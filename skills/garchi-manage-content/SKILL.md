@@ -1,6 +1,6 @@
 ---
 name: garchi-manage-content
-description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items, categories, item metadata, assets and languages. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, reorder or remove sections, add translations, or update SEO metadata in Garchi. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
+description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items, categories, item metadata, assets, languages and social posts. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, reorder or remove sections, add translations, update SEO metadata, or turn Garchi content into a LinkedIn or Instagram post for a person to approve. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
 ---
 
 # Garchi CMS: operating content over MCP
@@ -158,6 +158,59 @@ path for anything but small files, rather than pushing large base64 through the
 conversation. Uploads are rate-limited; if you hit that, wait rather than retry
 in a loop.
 
+## Social posts: you draft, a person publishes
+
+A space can connect social channels (LinkedIn, and Instagram where it is
+available to that account) in the Garchi dashboard. Over MCP you can read those
+channels, draft posts from Garchi content, revise them and hand them to a person
+for approval. **That is where your part ends.**
+
+The six tools: `list-social-channels-tool`, `create-social-post-tool`,
+`update-social-post-tool`, `get-social-post-tool`, `list-social-posts-tool` and
+`request-social-post-approval-tool`.
+
+**Only a person, in the dashboard, can** approve a post, publish it, schedule or
+reschedule it, cancel it or withdraw its approval, retry a failed publish, edit a
+post that is already live on the network, delete a live post, or connect and
+reconnect a channel. No tool does any of these, and asking for one will not
+produce one. Do not suggest workarounds.
+
+**Turn a page or item into a post**
+1. `get-page-tool` (`mode=draft`) or `get-data-item-tool` — read the source.
+2. `list-social-channels-tool` → `channel_id`s. Skip a channel with
+   `usable: false` and tell the user it needs reconnecting.
+3. Write copy suited to each network yourself.
+4. `create-social-post-tool` with `body`, `channel_ids`, optional `media`, and
+   `source_type`/`source_id` pointing at what it was written from.
+5. `request-social-post-approval-tool`. This checks the post against every
+   selected network's rules; an error names the channel and the problem. Fix it
+   with `update-social-post-tool` and ask again.
+6. Tell the user the post is waiting for their approval in the dashboard. Stop.
+
+Rules that matter:
+
+- **Media is referenced, never uploaded.** `media` entries are
+  `{"source": "space_asset", "id": "<asset id>"}` from `list-assets-tool`, or
+  `{"source": "data_item_image", "id": "<item id>"}` for an item's feature
+  image. No URLs.
+- **A post has text only, images, or exactly one video** — never both. Attaching
+  a video removes the other media; attaching an image removes a video.
+- **Video must already be a space asset** (`type: uploaded-video`).
+  `upload-asset-tool` does not accept video, so ask the user to upload it in the
+  dashboard. LinkedIn takes MP4; Instagram takes MP4 or MOV as a Reel; 500 MB
+  maximum. Garchi checks the file type and size, not codecs or duration, and
+  never converts video — the network can still reject a file after approval.
+- **Editing an approved or scheduled post withdraws its approval.** It returns to
+  `pending_approval`. Say so whenever you edit one.
+- **Publishing spends the space's credits**: one per successful publish to one
+  channel, so a post to LinkedIn and Instagram uses two. Failed and cancelled
+  publishes use none; deleting a published post gives none back. Every social
+  tool returns `publishing_allowance`. When `can_publish_more` is false you may
+  still draft, but tell the user it cannot publish until they upgrade.
+
+Tool details, network rules and worked examples:
+[social-publishing.md](./references/social-publishing.md).
+
 ## Leave notes for the next agent
 
 Spaces, pages, section templates, data items and assets each accept an
@@ -197,6 +250,9 @@ the Garchi dashboard rather than looking for a tool:
 - **Deleting pages, data items, categories or section templates.**
   `delete-section-tool` is the only delete here, and `manage-category-tool` only
   creates and updates.
+- **Anything past requesting approval for a social post**: approving,
+  scheduling, publishing, cancelling, retrying, editing or deleting a live post,
+  and connecting a channel.
 
 ## Before a change that is hard to undo
 
@@ -240,6 +296,11 @@ subscription, **stop** — that is a billing state, not a transient failure.
 Retrying it burns calls and changes nothing. Report which limit was hit and what
 was created before it.
 
+Social publishing credits are counted per space: 2 on Sandbox, 300 on Basic,
+unlimited on Pro, unlimited or custom on Business. Drafting and requesting
+approval never spend them — only a successful publish does, and a person starts
+that. Read `publishing_allowance` rather than assuming a plan.
+
 ## Stop conditions
 
 - Never retry a failing call more than twice. Re-read the state, then report.
@@ -252,6 +313,8 @@ was created before it.
 
 - [mcp-tools.md](./references/mcp-tools.md) — full tool inventory, arguments,
   and safety annotations
+- [social-publishing.md](./references/social-publishing.md) — social post tools,
+  network rules, the approval boundary and worked examples
 - `get-garchi-cms-guide` — the live content model from the server
 - Content model background:
   [../garchi-render-content/references/garchi-cms-doc.md](../garchi-render-content/references/garchi-cms-doc.md)

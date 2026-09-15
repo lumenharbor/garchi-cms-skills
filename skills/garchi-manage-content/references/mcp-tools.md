@@ -47,9 +47,17 @@ prompts. Summarised:
 | `upload-asset-tool` | — | — | — | — |
 | **`generate-image-tool`** | — | — | — | **✅** |
 | `add-language-to-space-tool` | — | — | — | — |
+| `list-social-channels-tool` | ✅ | ✅ | — | — |
+| `list-social-posts-tool` | ✅ | ✅ | — | — |
+| `get-social-post-tool` | ✅ | ✅ | — | — |
+| `create-social-post-tool` | — | — | — | — |
+| **`update-social-post-tool`** | — | ✅ | **✅** | — |
+| `request-social-post-approval-tool` | — | ✅ | — | — |
 
 The read-only tools are safe to call freely to orient yourself. The two
-destructive tools need explicit per-item confirmation. `generate-image-tool`
+destructive content tools need explicit per-item confirmation.
+`update-social-post-tool` is marked destructive because editing an approved post
+withdraws its approval; say so before making that edit. `generate-image-tool`
 reaches an external model and spends the account's image allowance.
 
 ## Orientation
@@ -239,6 +247,40 @@ Every space starts with `en-US`.
 by i18n code (`fr-FR`, `es-ES`). Prop values are then writable per language via
 `upsert-section-content-tool`'s `language_id`.
 
+## Social publishing
+
+Drafting and approval requests only. No tool here approves, schedules, publishes,
+retries, or edits or deletes a post that is live on a network — a person does
+all of that in the dashboard. Full rules and examples:
+[social-publishing.md](./social-publishing.md).
+
+**`list-social-channels-tool`** (`space_uid`) — connected channels with
+`channel_id`, `provider`, `account_name`, `status` and `usable`. Connecting a
+channel is done in the dashboard.
+
+**`create-social-post-tool`** (`space_uid`, `body`, `channel_ids[]?`, `media[]?`,
+`source_type?`, `source_id?`) — creates a draft. `media` entries are
+`{source: space_asset|data_item_image, id, alt_text?}` referencing existing
+Garchi media; nothing is uploaded and URLs are not accepted. A post holds text
+only, images, or one video.
+
+**`update-social-post-tool`** (`space_uid`, `post_id`, plus any of `body`,
+`channel_ids[]`, `media[]`) — `channel_ids` and `media` each replace the whole
+list. Editing an approved or scheduled post withdraws its approval.
+
+**`get-social-post-tool`** (`space_uid`, `post_id`) — the full post, per-channel
+delivery status and recent activity.
+
+**`list-social-posts-tool`** (`space_uid`, `status?`, `limit?`) — newest first,
+optionally filtered by status.
+
+**`request-social-post-approval-tool`** (`space_uid`, `post_id`) — checks the
+post against each selected network's rules and hands it to a person. The last
+step an agent can take.
+
+Every social tool returns `publishing_allowance`. Credits are counted per space,
+one per successful publish to one channel.
+
 ## Resources and prompt
 
 The server also exposes MCP **resources**, useful when the task moves from
@@ -268,6 +310,10 @@ guidance for that combination.
 - Restore anything. Garchi keeps automatic restore points for recent page,
   section-template and data item changes, available from the content history in
   the dashboard for a limited window, but no tool here rolls a change back.
+- Approve, schedule, publish, cancel or retry a social post, edit or delete a
+  post that is live on a network, or connect a social channel.
+- Upload video. `upload-asset-tool` accepts images, PDF, Office documents, plain
+  text and CSV; a video for a social post is uploaded in the dashboard.
 
 ## Safety model
 
