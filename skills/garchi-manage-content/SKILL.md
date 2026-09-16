@@ -1,6 +1,6 @@
 ---
 name: garchi-manage-content
-description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items, categories, item metadata, assets, languages and social posts. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, reorder or remove sections, add translations, update SEO metadata, or turn Garchi content into a LinkedIn or Instagram post for a person to approve. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
+description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items, categories, item metadata, assets, languages and social posts. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, reorder or remove sections, add translations, update SEO metadata, or turn Garchi content into a LinkedIn, Instagram or Facebook Page post for a person to approve. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
 ---
 
 # Garchi CMS: operating content over MCP
@@ -160,8 +160,9 @@ in a loop.
 
 ## Social posts: you draft, a person publishes
 
-A space can connect social channels (LinkedIn, and Instagram where it is
-available to that account) in the Garchi dashboard. Over MCP you can read those
+A space can connect social channels (LinkedIn, and Instagram and Facebook Pages
+where they are available to that account) in the Garchi dashboard. Each
+connected Facebook Page is a separate channel. Over MCP you can read those
 channels, draft posts from Garchi content, revise them and hand them to a person
 for approval. **That is where your part ends.**
 
@@ -197,8 +198,8 @@ Rules that matter:
   a video removes the other media; attaching an image removes a video.
 - **Video must already be a space asset** (`type: uploaded-video`).
   `upload-asset-tool` does not accept video, so ask the user to upload it in the
-  dashboard. LinkedIn takes MP4; Instagram takes MP4 or MOV as a Reel; 500 MB
-  maximum. Garchi checks the file type and size, not codecs or duration, and
+  dashboard. LinkedIn takes MP4; Instagram (as a Reel) and Facebook Pages take
+  MP4 or MOV; 500 MB maximum. Garchi checks the file type and size, not codecs or duration, and
   never converts video — the network can still reject a file after approval.
 - **Editing an approved or scheduled post withdraws its approval.** It returns to
   `pending_approval`. Say so whenever you edit one.

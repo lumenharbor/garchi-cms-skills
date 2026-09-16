@@ -110,6 +110,13 @@ Checked when approval is requested, and again when a person approves.
   choose a different image if it does not fit.
 - One video, published as a Reel: MP4 or MOV, up to 500 MB.
 
+**Facebook Pages** — only when the space has a Facebook Page connected. Each
+connected Page is its own channel; personal profiles and Groups are not
+supported.
+- Text, one image, or one video. Text up to 63,206 characters.
+- Image: JPEG, PNG or GIF, up to 10 MB.
+- Video: MP4 or MOV, up to 500 MB.
+
 For video, Garchi verifies the file type and size only. The network processes
 the video itself and can still refuse it for its codec, duration, frame rate or
 audio. That refusal happens after approval, shows as a failed channel in the
