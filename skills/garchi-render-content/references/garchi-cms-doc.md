@@ -212,7 +212,7 @@ Data item images are supplied on the item itself, not from the space's assets. A
 
 Images can be added by visiting Garchi CMS dashboard ---> click on Manage --> Add Images
 
-Over the API, SDK or MCP they are passed inline as base64 strings on the item, the first one becoming the featured image. The MCP tool `generate-image-tool` with `image_for: data_item` can also set an item's main image directly.
+Over MCP, an item's main image is set with `generate-image-tool` using `image_for: data_item` and the item's id — the create and update tools take no image argument. To put their own photo on an item, the user adds it in the dashboard.
 
 
 ## Item options (E-commerce only feature)

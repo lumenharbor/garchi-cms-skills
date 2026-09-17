@@ -165,14 +165,14 @@ numeric.
 
 **`create-data-item-tool`** (`space_uid`, `name`, `slug`, `categories[]`,
 `detail_description`, plus optional `one_liner`, `agent_description`, `sku`,
-`stock`, `price`, `images[]`, `scheduled_for_datetime`) — `slug` is unique in
-the space. `detail_description` is the HTML body; `one_liner` is a one line
-summary, max 1000 characters. `categories` needs at least one valid id.
+`stock`, `price`, `scheduled_for_datetime`) — `slug` is unique in the space.
+`detail_description` is the HTML body; `one_liner` is a one line summary, max
+1000 characters. `categories` needs at least one valid id.
 `sku`/`stock`/`price` apply only to sellable items: `price` accepts decimals
 (`19.99`) and `sku` is unique **within the space**, so the same sku may exist in
-another space. `images` are base64 data URIs — `png`, `jpg`, `jpeg`, `webp` or
-`svg+xml`, max 10 MB each — the first becoming the featured image; data items
-never use space assets. Counts against the plan's item limit.
+another space. There is no image argument: an item's image is set afterwards
+with `generate-image-tool` (`image_for: data_item` plus the new item's id), and
+data items never use space assets. Counts against the plan's item limit.
 
 **The item is created as a draft** (`published: false`) and the content API
 serves published items only, so it is not on the user's site yet. Pass
@@ -223,10 +223,14 @@ an `asset_id` from a different space.
 **`upload-asset-tool`** (`space_uid`, `file_name`, `file_type`,
 `file_raw_content?`, `agent_description?`) — `file_type` must be an allowed MIME
 type (images, PDF, Office documents, plain text and CSV) and the `file_name`
-extension has to match it. For text types pass raw text; for binary pass base64
-or a data URI. Omit `file_raw_content` — or pass `UPLOAD_VIA_BROWSER` — to open
-an upload window for the user and get a short-lived signed upload URL instead;
-that is the right route for anything but small files. Rate-limited per user.
+extension has to match it. For images, PDFs and documents, send only `space_uid`,
+`file_name` and `file_type`: the tool opens an upload window for the user to pick
+the file and returns a short-lived signed upload URL for hosts that cannot render
+that window. That is the only route for those types — you cannot read the user's
+files, so never try to send the bytes. `file_raw_content` is for `text/plain` and
+`text/csv` only, where you pass the plain text body. The reply's `mode` says which
+happened: `direct` (stored already) or `browser_upload` (the user finishes it, so
+wait for confirmation before using the asset). Rate-limited per user.
 
 **`generate-image-tool`** (`prompt`, `space_uid`, `image_for`, `orientation`,
 `data_item_id?`) — reaches an external model and **spends the account's monthly

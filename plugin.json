@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "garchi-cms",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Build and manage structured websites and applications with Garchi CMS using AI agents, official starter kits and a production MCP integration.",
   "author": {
     "name": "LumenHarbor Digital Solutions Limited",

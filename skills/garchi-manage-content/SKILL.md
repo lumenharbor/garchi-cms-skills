@@ -144,19 +144,26 @@ This is what "move that section up" means; it is not a delete-and-recreate.
 - *Page sections* use space assets. `list-assets-tool` to find one,
   `upload-asset-tool` to add one, then set the `media` prop by `asset_id`. The
   asset must belong to the same space; an id from another space is rejected.
-- *Data items* take images **inline as base64 data URIs** on the item itself,
-  first image being the featured one — `png`, `jpg`, `jpeg`, `webp` or
-  `svg+xml`, max 10 MB each. Data items never use space assets.
-- `generate-image-tool` covers both: `image_for: page` returns an `asset_id` to
-  use in a section prop; `image_for: data_item` needs a `data_item_id` and sets
-  that item's main image directly.
+- *Data items* get their image from `generate-image-tool` alone. Create or
+  update the item first, then call it with `image_for: data_item` and the item
+  id. `create-data-item-tool` and `update-data-item-tool` take no image
+  argument. Data items never use space assets.
+- `generate-image-tool` covers both systems: `image_for: page` returns an
+  `asset_id` to use in a section prop; `image_for: data_item` needs a
+  `data_item_id` and sets that item's main image directly.
+- You cannot read the user's files, so you never supply image bytes yourself.
+  For a page asset the user supplies the file; for a data item the image is
+  generated. If the user wants their own photo on a data item, say that the
+  dashboard is the place for it (Manage → Add Images).
 
 For `upload-asset-tool`, `file_type` must be an allowed MIME type and the
-`file_name` extension has to match it. Omitting the file content opens a browser
-upload window for the user and returns a signed upload link — that is the right
-path for anything but small files, rather than pushing large base64 through the
-conversation. Uploads are rate-limited; if you hit that, wait rather than retry
-in a loop.
+`file_name` extension has to match it. For an image, PDF or document, send only
+`space_uid`, `file_name` and `file_type`: the tool opens an upload window for
+the user and returns a short-lived signed upload URL for hosts that cannot
+render that window. That is the only route for those types — do not try to send
+file bytes. `file_raw_content` is for `text/plain` and `text/csv` only, where
+you pass the plain text body. Uploads are rate-limited; if you hit that, wait
+rather than retry in a loop.
 
 ## Social posts: you draft, a person publishes
 
