@@ -1,6 +1,6 @@
 {
   "name": "@garchicms/garchi-cms-skills",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Garchi CMS integration for AI coding agents: skills, starter-kit guidance and the hosted Garchi MCP server, packaged as an Agent Plugin.",
   "keywords": [
     "garchi",

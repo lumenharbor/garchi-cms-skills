@@ -13,7 +13,7 @@
       "name": "garchi-cms",
       "source": "./",
       "description": "Build and manage structured websites and applications with Garchi CMS using AI agents, official starter kits and a production MCP integration.",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "homepage": "https://garchi.co.uk",
       "repository": "https://github.com/lumenharbor/garchi-cms-skills",
       "license": "MIT",
