@@ -171,8 +171,10 @@ numeric.
 `sku`/`stock`/`price` apply only to sellable items: `price` accepts decimals
 (`19.99`) and `sku` is unique **within the space**, so the same sku may exist in
 another space. There is no image argument: an item's image is set afterwards
-with `generate-image-tool` (`image_for: data_item` plus the new item's id), and
-data items never use space assets. Counts against the plan's item limit.
+with `generate-image-tool` (`image_for: data_item` plus the new item's id),
+never by attaching an asset. Images inside `detail_description` are `<img>` tags
+pointing at an asset's `path`, never base64 `data:` images. Counts against the
+plan's item limit.
 
 **The item is created as a draft** (`published: false`) and the content API
 serves published items only, so it is not on the user's site yet. Pass
@@ -217,8 +219,12 @@ so pick an id from it directly and never loop. Clients that support MCP UI also
 show the user a gallery of the same assets; if the user picks some, their ids
 arrive as a follow-up message.
 
-Assets belong to the space that owns them: `upsert-section-content-tool` rejects
-an `asset_id` from a different space.
+The list is the space's media library: page section media, images the user
+pasted into rich-text editors, and possibly data item images. Assets belong to
+the space that owns them: `upsert-section-content-tool` rejects an `asset_id`
+from a different space. To show an image inside rich text, use the asset's
+`path` as the `<img>` `src`. An asset still in use cannot be deleted from the
+dashboard until it is removed from where it is used.
 
 **`upload-asset-tool`** (`space_uid`, `file_name`, `file_type`,
 `file_raw_content?`, `agent_description?`) — `file_type` must be an allowed MIME

@@ -140,14 +140,15 @@ This is what "move that section up" means; it is not a delete-and-recreate.
    false.
 6. Tell the user the item is a draft and needs publishing in the dashboard.
 
-**Images** — two different systems, do not mix them:
+**Images** — set differently for pages and data items:
 - *Page sections* use space assets. `list-assets-tool` to find one,
   `upload-asset-tool` to add one, then set the `media` prop by `asset_id`. The
   asset must belong to the same space; an id from another space is rejected.
 - *Data items* get their image from `generate-image-tool` alone. Create or
   update the item first, then call it with `image_for: data_item` and the item
   id. `create-data-item-tool` and `update-data-item-tool` take no image
-  argument. Data items never use space assets.
+  argument. Their images may also appear in `list-assets-tool`, but you never
+  set a data item's image by attaching an asset.
 - `generate-image-tool` covers both systems: `image_for: page` returns an
   `asset_id` to use in a section prop; `image_for: data_item` needs a
   `data_item_id` and sets that item's main image directly.
@@ -155,6 +156,10 @@ This is what "move that section up" means; it is not a delete-and-recreate.
   For a page asset the user supplies the file; for a data item the image is
   generated. If the user wants their own photo on a data item, say that the
   dashboard is the place for it (Manage → Add Images).
+- *Images inside rich text* (`detail_description`, `richtext` props): write an
+  `<img>` whose `src` is an asset's `path` from `list-assets-tool`. Never embed a
+  base64 `data:` image in HTML. Images the user pastes into the dashboard editor
+  already become assets and are linked this way.
 
 For `upload-asset-tool`, `file_type` must be an allowed MIME type and the
 `file_name` extension has to match it. For an image, PDF or document, send only

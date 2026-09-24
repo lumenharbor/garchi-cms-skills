@@ -50,7 +50,9 @@ Page can be created using the [API](https://garchi.co.uk/docs/v2#headless-web-PO
 
 ## Assets
 
-The Assets are uploaded files that can only be used in your page sections. User has to upload the asset to the Garchi CMS before using it in the page section or AI tools could use upload-asset-tool of Garchi MCP server.
+The Assets are the space's media library. Page sections use them through `media` props. User has to upload the asset to the Garchi CMS before using it in the page section or AI tools could use upload-asset-tool of Garchi MCP server.
+
+Images pasted into a rich-text editor (a data item's description or a section's `richtext` prop) are uploaded as assets automatically: WebP, at most 2000 × 2000 pixels. The HTML links to them by URL; it never embeds base64 images.
 
 When using Garchi Server MCP tools, add prop type of media so that it can support asset values.
 
@@ -208,7 +210,7 @@ This preserves the original metadata structure while optimizing access.
 ## Data item images
 
 Each data items can have one main image generally used as a featured image and up to 8 additional images.
-Data item images are supplied on the item itself, not from the space's assets. Assets are for page sections only.
+Data item images are set on the item itself, not by attaching a space asset, although they may also appear in the space's asset list.
 
 Images can be added by visiting Garchi CMS dashboard ---> click on Manage --> Add Images
 

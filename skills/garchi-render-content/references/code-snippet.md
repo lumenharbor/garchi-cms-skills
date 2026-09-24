@@ -523,7 +523,7 @@ The snippets above reference a few small helpers/atoms. **If the project already
 
 ### Markdown / rich-text renderer (sanitize HTML)
 
-Data item `description` and section `richtext` props are HTML, so **always sanitize before rendering** to prevent XSS. Reference implementation in React using DOMPurify — mirror the project's existing sanitizing component if one exists (it may be named `Markdown`, `MarkdownRenderer`, etc.):
+Data item `description` and section `richtext` props are HTML, so **always sanitize before rendering** to prevent XSS. Images inside them are `<img>` tags with absolute `https` asset URLs (WebP), so the sanitizer must keep `img` and its `src`, `alt`, `width` and `height`. Reference implementation in React using DOMPurify — mirror the project's existing sanitizing component if one exists (it may be named `Markdown`, `MarkdownRenderer`, etc.):
 
 ```tsx
 // components/common/Markdown.tsx  (referenced as MarkdownRenderer in some snippets — same atom)
