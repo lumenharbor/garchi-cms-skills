@@ -26,10 +26,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "validate": "node scripts/validate.mjs && npm run --silent validate:skills && npm run --silent validate:schemas && npm run --silent validate:links",
-    "validate:skills": "for d in skills/*/; do skills-ref validate \"$d\" || exit 1; done",
-    "validate:schemas": "node scripts/validate-schemas.mjs",
-    "validate:links": "node scripts/validate-links.mjs"
+    "validate": "node validate.mjs && npm run --silent validate:skills && npm run --silent validate:schemas && npm run --silent validate:links",
+    "validate:skills": "for d in ../skills/*/; do skills-ref validate \"$d\" || exit 1; done",
+    "validate:schemas": "node validate-schemas.mjs",
+    "validate:links": "node validate-links.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

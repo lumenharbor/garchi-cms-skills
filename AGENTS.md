@@ -46,7 +46,7 @@ agent should be able to tell from the descriptions alone which one applies.
 ## Validating changes
 
 ```bash
-npm run validate
+npm --prefix scripts install && npm --prefix scripts run validate
 ```
 
 That runs four checks in sequence:
