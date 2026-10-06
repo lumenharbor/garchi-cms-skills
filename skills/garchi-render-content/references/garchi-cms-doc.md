@@ -254,7 +254,7 @@ Categories can be managed using the API, SDK or using the MCP tool manage-catego
 
 - OpenAPI specification for Garchi CMS can be found at [https://garchi.co.uk/docs/v2.openapi](https://garchi.co.uk/docs/v2.openapi)
 
-- Garchi CMS has SDKs for Node and PHP. It has starter kits for Next, Nuxt and Laravel. Starter kits can be installed using the command `npx @lumenharbor/garchi-starter-kit -k next`, replacing next with nuxt or laravel as per your requirements. For a fresh project on one of those frameworks a starter kit is recommended. Starter kits use Tailwind CSS for styling and have example components to render pages. Starter kits come with respective SDKs and .env files. Any other framework integrates through the SDKs or the REST API instead.
+- Garchi CMS has SDKs for Node and PHP. It has starter kits for Next, Nuxt and Laravel. Starter kits can be installed using the command `npx @lumenharbor/garchi-starter-kit@0.1.2 -k next`, replacing next with nuxt or laravel as per your requirements. For a fresh project on one of those frameworks a starter kit is recommended. Starter kits use Tailwind CSS for styling and have example components to render pages. Starter kits come with respective SDKs and .env files. Any other framework integrates through the SDKs or the REST API instead.
 
 
 

@@ -133,7 +133,7 @@ To install just the skills into any of the agents supported by the `skills`
 CLI:
 
 ```bash
-npx skills add lumenharbor/garchi-cms-skills
+npx skills@1.7.0 add lumenharbor/garchi-cms-skills
 ```
 
 Configure the MCP server separately — see
@@ -166,7 +166,7 @@ SDK:
 Bootstrap any of them:
 
 ```bash
-npx @lumenharbor/garchi-starter-kit -k next
+npx @lumenharbor/garchi-starter-kit@0.1.2 -k next
 ```
 
 `-k` accepts `next`, `nuxt` or `laravel`.

@@ -15,7 +15,7 @@ The SDK is a thin wrapper over the REST API [documented here](https://garchi.co.
 Install the SDK using npm or yarn:
 
 ```bash
-npm install @garchicms/garchi-node-sdk
+npm install @garchicms/garchi-node-sdk@0.0.9
 ```
 
 ## Initialization

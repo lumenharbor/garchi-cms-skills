@@ -13,7 +13,7 @@ One CLI clones the right repo, installs dependencies and (for Laravel) prepares
 `.env` and the app key:
 
 ```bash
-npx @lumenharbor/garchi-starter-kit -k next
+npx @lumenharbor/garchi-starter-kit@0.1.2 -k next
 ```
 
 `-k` accepts `next`, `nuxt` or `laravel`. `-n <name>` sets the target
