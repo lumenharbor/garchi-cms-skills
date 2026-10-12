@@ -17,7 +17,7 @@ Our focus is giving you a way to manage your content while giving complete freed
 Some examples of using GarchiCMS (Remember sky is the limit):
 
 - Headless site with Nuxt/Next, Supabase and Garchi CMS.
-- E-commerce mobile app with React Native, Firebase, and Garchi CMS for product data.
+- Mobile app with React Native, Firebase, and Garchi CMS for product content.
 - Full stack app with Django/Laravel/Ruby on Rails, Postgres, and Garchi CMS for content.
 
 
@@ -126,7 +126,7 @@ Each data item has one or many categories. Each data item has a base schema whic
 5. Detailed rich text description in HTML format
 
 
-The base item schema also includes ecommerce fields for data items that are sellable like products. These fields are optional and can be used as per your requirements. The ecommerce fields include:
+The base item schema also includes optional product fields for data items such as products. They are plain content fields, used as per your requirements; Garchi does not process payments, run a basket or checkout, manage orders, or update stock when something is purchased. The product fields include:
 
 7. Stock
 8. Price
@@ -217,9 +217,9 @@ Images can be added by visiting Garchi CMS dashboard ---> click on Manage --> Ad
 Over MCP, an item's main image is set with `generate-image-tool` using `image_for: data_item` and the item's id — the create and update tools take no image argument. To put their own photo on an item, the user adds it in the dashboard.
 
 
-## Item options (E-commerce only feature)
+## Item options (variants)
 
-Sometimes you might have a product which has additional attributes. For example a T-Shirt might have size, colour as attributes that your user wants to choose while adding the product in the basket. For such cases we have a feature for each item to add an options tree (attribute tree). This is separate from item meta is specifically designed to handle sellable item attributes and variants. This can be done using the API.
+Sometimes an item has additional attributes. For example a T-Shirt might have size and colour options that your website or app lets a visitor choose. For such cases each item can have an options tree (attribute tree). This is separate from item meta and is designed to hold product attributes and variants. Options are added in the Garchi dashboard (Manage --> Add Options) and returned with the item by the Data Items API. Garchi stores and serves them; it does not add items to a basket or process the purchase.
 
 You need to start by adding a main option which has sub options under it.
 
@@ -233,9 +233,9 @@ We can now have S,M,L,XL,XXL as sub options for Size main option. If there is an
 
 The item data provides the basic configuration, but your app code should validate quantities, calculate totals properly, prevent incorrect selections, etc. based on the item configuration.
 
-For example, if a main option requires a minimum of 2 selections, your app would need to enforce that minimum quantity at the time of purchase. The item data provides the minimum quantity rule, but does not automatically enforce it.
+For example, if a main option requires a minimum of 2 selections, your app would need to enforce that minimum when the visitor makes their choice. The item data provides the minimum quantity rule, but does not automatically enforce it.
 
-Similarly, any conditional pricing for sub options would need to be calculated correctly in the cart/checkout process. The item data provides the pricing rules, but the totals need to be computed accurately in code.
+Similarly, any additional pricing for sub options would need to be added up in your own application. The item data provides the pricing rules, but any totals need to be computed in code.
 
 
 
