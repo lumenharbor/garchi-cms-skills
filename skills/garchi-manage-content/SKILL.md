@@ -130,8 +130,8 @@ sections, `change-nested-section-rank-tool` (plus `parent_id`) for children.
 This is what "move that section up" means; it is not a delete-and-recreate.
 
 **Create a data item**
-1. `list-categories-tool` → category ids (`manage-category-tool` with
-   `action: create` if needed). An item needs at least one.
+1. `list-categories-tool` → category ids (`create-category-tool` if
+   needed). An item needs at least one.
 2. `list-item-types-tool` → is there a type for this kind of item (Product,
    Event…)? If so, note its `id` and fields. `list-item-meta-tool` → what keys
    and types similar items already use.
@@ -295,8 +295,8 @@ the Garchi dashboard rather than looking for a tool:
 - **Publishing a page or a data item.** Both go live only when the owner
   publishes them in the dashboard.
 - **Deleting pages, data items, categories or section templates.**
-  `delete-section-tool` is the only delete here, and `manage-category-tool` only
-  creates and updates.
+  `delete-section-tool` is the only delete here, and categories can only be
+  created (`create-category-tool`) and renamed (`update-category-tool`).
 - **Anything past requesting approval for a social post**: approving,
   scheduling, publishing, cancelling, retrying, editing or deleting a live post,
   and connecting a channel.

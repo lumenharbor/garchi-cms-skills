@@ -257,7 +257,7 @@ Each data item needs to have one or more categories.
 
 Categories are useful to club items together.
 
-Categories can be managed using the API, SDK or using the MCP tool manage-category-tool.
+Categories can be managed using the API, SDK or using the MCP tools create-category-tool and update-category-tool.
 
 
 # Good to know

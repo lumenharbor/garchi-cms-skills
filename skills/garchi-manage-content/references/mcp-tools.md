@@ -43,7 +43,8 @@ prompts. Summarised:
 | **`delete-section-tool`** | — | ✅ | **✅** | — |
 | `create-data-item-tool` | — | — | — | — |
 | `update-data-item-tool` | — | — | — | — |
-| `manage-category-tool` | — | — | — | — |
+| `create-category-tool` | — | — | — | — |
+| `update-category-tool` | — | ✅ | ✅ | — |
 | `create-meta-for-item-tool` | — | — | — | — |
 | `create-item-type-tool` | — | — | — | — |
 | `upload-asset-tool` | — | — | — | — |
@@ -199,10 +200,15 @@ published it; it does not publish itself.
 
 **`list-categories-tool`** (`space_uid`) — categories in the space.
 
-**`manage-category-tool`** (`space_uid`, `category`, `action`, `category_id?`) —
-`action` is `create` or `update` only; `category_id` is required for `update`.
-There is no category delete over MCP. Creating counts against the plan's
+**`create-category-tool`** (`space_uid`, `category`) — creates a category and
+returns it with its `id`. Calling it twice makes two. Counts against the plan's
 category limit.
+
+**`update-category-tool`** (`space_uid`, `category_id`, `category`) — renames a
+category. Its id, position and items stay as they are, and the items stay
+published. Marked destructive because the old name is replaced.
+
+There is no category delete over MCP.
 
 **`list-item-meta-tool`** (`space_uid`) — the metadata keys and types already in
 use across the space. Read this before adding metadata so similar items stay
