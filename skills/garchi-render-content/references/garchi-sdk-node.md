@@ -69,7 +69,7 @@ async query(body: CompoundQueryBody, params: ItemsQueryParams) : Promise<GarchiI
 
 ## Data items Utility
 ```typescript
-import { CreateDataItemParams, CreateMetaInfoParams, DeleteDataItemParams, DeleteMetaInfoParams, FilterItemsByMetaParams, FilterItemsParams, GarchiItem, GarchiItemAPIResponse, GarchiItemMeta, GetAllItemsParams, GetFeaturedItemsParams, GetItemParams, GetItemsByIdsParams, GetItemsBySpaceParams, SemanticSearchParams, UpdateDataItemParams, UpdateMetaInfoParams } from "../../types";
+import { CreateDataItemParams, CreateMetaInfoParams, DeleteDataItemParams, DeleteMetaInfoParams, FilterItemsByMetaParams, FilterItemsParams, GarchiItem, GarchiItemAPIResponse, GarchiItemMeta, GetAllItemsParams, GetFeaturedItemsParams, GetItemParams, GetItemsByIdsParams, GetItemsBySpaceParams, GetItemChildrenParams, QueryItemsParams, SemanticSearchParams, UpdateDataItemParams, UpdateMetaInfoParams } from "../../types";
 
 ⋮----
 class DataItem extends APIClient
@@ -101,7 +101,19 @@ async filter(params: FilterItemsParams) : Promise<GarchiItem[]>
 async filterByMeta(params: FilterItemsByMetaParams) : Promise<GarchiItem[]>
 ⋮----
 async getByIds(params: GetItemsByIdsParams) : Promise<GarchiItemAPIResponse>
+⋮----
+// POST /space/{uid}/items/query: { uid, where?, sort?, page?, size?, reactions?, description?, children? }
+async query(params: QueryItemsParams): Promise<GarchiItemAPIResponse>
+⋮----
+// GET /space/{uid}/items/{item}/children: the published items inside an item, in order
+async getChildren(params: GetItemChildrenParams): Promise<GarchiItemAPIResponse>
 ```
+
+Since 0.0.10 every `GarchiItem` has `parent_id` (the item it is inside, or null) and
+`children_count`; `children` is filled only when a call passes `children: "include"`.
+`create()` takes an optional `parent_id`, `update()` takes `parent_id` (null takes the item
+out on its own). `query()` filters by `parent_id` (`not_exists` = top-level items only) and
+sorts by `position`.
 
 ## Headless Utility
 ```typescript

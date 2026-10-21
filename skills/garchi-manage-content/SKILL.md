@@ -1,6 +1,6 @@
 ---
 name: garchi-manage-content
-description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items, categories, item metadata, assets, languages and social posts. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, reorder or remove sections, add translations, update SEO metadata, or turn Garchi content into a LinkedIn, Instagram or Facebook Page post for a person to approve. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
+description: Operate content in Garchi CMS through the Garchi MCP server — pages and their section trees, section templates and props, data items (including items inside items, such as variants and lessons), item types, categories, item metadata, assets, languages and social posts. Use when the user asks to add or edit pages, change copy or images, build a page from templates, create blog posts or products, give a recurring kind of item (products, events, team members) a consistent structure, reorder or remove sections, add translations, update SEO metadata, or turn Garchi content into a LinkedIn, Instagram or Facebook Page post for a person to approve. This is content operations, not code — for fetching and rendering content in an application use garchi-render-content.
 ---
 
 # Garchi CMS: operating content over MCP
@@ -29,8 +29,8 @@ list-space-tool ─────────► space_uid ──► needed by nea
     ┌────────────────────────┼────────────────────────┐
     ▼                        ▼                        ▼
 list-section-template   list-pages-tool          list-categories-tool
-    │                        │                        │
-    │ section_template_id    │ page_id                │ category ids
+    │                        │                        │ + list-item-types-tool
+    │ section_template_id    │ page_id                │ category ids, item_type_id
     │ + prop template ids    │                        │
     ▼                        ▼                        ▼
 create-section-tool ──► get-page-tool ──► section ids   create-data-item-tool
@@ -49,6 +49,10 @@ Two id traps worth knowing:
   `get-page-tool`.
 - `get-data-item-tool`, `update-data-item-tool` and `create-meta-for-item-tool`
   take a numeric **`item_id`**, not the slug.
+- An item type's field `key` is the metadata key to write; its numeric `id` is
+  the `item_type_id` on the item.
+- `parent_id` is the numeric id of another data item (from
+  `list-data-items-tool`), never its slug.
 
 ## Working rules
 
@@ -128,17 +132,47 @@ This is what "move that section up" means; it is not a delete-and-recreate.
 **Create a data item**
 1. `list-categories-tool` → category ids (`manage-category-tool` with
    `action: create` if needed). An item needs at least one.
-2. `list-item-meta-tool` → what keys and types similar items already use.
+2. `list-item-types-tool` → is there a type for this kind of item (Product,
+   Event…)? If so, note its `id` and fields. `list-item-meta-tool` → what keys
+   and types similar items already use.
 3. `create-data-item-tool` → `name`, unique `slug`, `categories`,
-   `detail_description` (the HTML body), optional `one_liner` (a one line
-   summary, max 1000 chars), optional `scheduled_for_datetime`, and `price`
-   (decimals allowed) / `stock` / `sku` only for sellable items. `sku` is unique
-   within the space.
-4. `create-meta-for-item-tool` per extra field, reusing the keys and types from
-   step 2.
+   `detail_description` (the HTML body), `item_type_id` when a type fits,
+   optional `one_liner` (a one line summary, max 1000 chars), optional
+   `scheduled_for_datetime`, and `price` (decimals allowed) / `stock` / `sku`
+   only for sellable items. `sku` is unique within the space.
+4. `create-meta-for-item-tool` per field. For a typed item, one entry per type
+   field — `key` = the field's `key`, `type` = its `meta_type`, `value` written
+   as its `value_format` — and every `required` field filled. Any other extra
+   field reuses the keys and types from step 2.
 5. `get-data-item-tool` → verify. The result carries `published`, which will be
-   false.
+   false, and `item_type_id`.
 6. Tell the user the item is a draft and needs publishing in the dashboard.
+
+**Items inside items (variants, lessons, chapters)**
+When items belong to one another — the sizes of a product, the lessons of a
+course, the chapters of a guide — put each one inside its parent with
+`parent_id` (on create, or on update). Create the parent first, then its items
+in the order they should appear; each new one goes at the end. Items nest at
+most three levels (Course → Module → Lesson) and only within one space.
+`list-data-items-tool` shows every item's `parent_id`; `get-data-item-tool`
+shows `children_ids`. Items that only share a topic belong in a category, not
+inside each other. Reordering is done in the dashboard.
+
+**Structured items: when to create an item type**
+Item types keep a recurring kind of item consistent, so the user's frontend can
+rely on every Event having `starts_on` and `venue`, and editors get a form
+instead of free-form metadata.
+- **Reuse first.** If `list-item-types-tool` has a type that fits, use it, even
+  if its name differs slightly. Never create a near-duplicate.
+- **Create** with `create-item-type-tool` when the user is adding several items
+  of a kind that has no type yet, or asks for a structure. A one-off item does
+  not need one. Start from a `template` when one fits; otherwise send a `name`
+  and `fields`. If items of that kind already exist, use their metadata keys as
+  the field keys (from `list-item-meta-tool`) so their values line up, and link
+  them with `update-data-item-tool` (`item_type_id`) — each such update puts that
+  item into draft, so say which items you linked.
+- Fields a type does not have can still be added as extra metadata on an item.
+- Changing or deleting a type's fields is done in the dashboard.
 
 **Images** — set differently for pages and data items:
 - *Page sections* use space assets. `list-assets-tool` to find one,

@@ -217,6 +217,18 @@ Images can be added by visiting Garchi CMS dashboard ---> click on Manage --> Ad
 Over MCP, an item's main image is set with `generate-image-tool` using `image_for: data_item` and the item's id — the create and update tools take no image argument. To put their own photo on an item, the user adds it in the dashboard.
 
 
+## Items inside items
+
+A data item can sit inside another data item of the same space: a variant inside its product, a lesson inside a module inside a course, a chapter inside a guide. Items nest up to three levels, and the items inside a parent keep the order set in the dashboard.
+
+- Every item the API returns has `parent_id` (the item it is inside, or null) and `children_count` (how many published items are inside it).
+- `GET /api/v2/space/{uid}/items/{item}/children` (SDK: `dataItem.getChildren`) returns the published items inside an item, in their order. The parent must be published too.
+- Any item endpoint accepts `children=include` to return each item's published `children` in the same response, one level deep. Without it, only the count is returned.
+- The query endpoint (SDK: `dataItem.query`) filters by `parent_id` (`eq`, `in`, or `not_exists` for top-level items only) and sorts by `position`.
+- Creating or updating an item through the API, SDK or MCP takes `parent_id`; the item goes after the items already inside that parent. Deleting a parent keeps the items inside it, at the top level.
+
+Use items inside items when each variant needs its own content, images, price or slug. For a simple choice of size or colour on one product, item options (below) are lighter.
+
 ## Item options (variants)
 
 Sometimes an item has additional attributes. For example a T-Shirt might have size and colour options that your website or app lets a visitor choose. For such cases each item can have an options tree (attribute tree). This is separate from item meta and is designed to hold product attributes and variants. Options are added in the Garchi dashboard (Manage --> Add Options) and returned with the item by the Data Items API. Garchi stores and serves them; it does not add items to a basket or process the purchase.

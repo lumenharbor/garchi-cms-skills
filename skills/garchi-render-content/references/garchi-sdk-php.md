@@ -479,7 +479,19 @@ $response = $this->client->request('POST', "/items/filter/bymeta", [
 ⋮----
 public function getByIds(array $params): GarchiItemAPIResponse {
 $response = $this->client->request('POST', "/items/byids", [
+⋮----
+// ['uid' => ..., 'where' => ..., 'sort' => [...], 'page' => 1, 'size' => 10, 'children' => 'include']
+public function query(array $params): GarchiItemAPIResponse {
+$response = $this->client->request('POST', "/space/{$uid}/items/query", ['json' => (object) $params]);
+⋮----
+// ['uid' => ..., 'item' => id or slug, 'page' => 1, 'size' => 10, 'children' => 'include']
+public function getChildren(array $params): GarchiItemAPIResponse {
+$response = $this->client->request('GET', "/space/{$uid}/items/{$item}/children", ['query' => $params]);
 ```
+
+Every `GarchiItem` has `parent_id` (the item it is inside, or null), `children_count`, and
+`children` (filled only with `'children' => 'include'`). `create()` takes an optional
+`parent_id`; `update()` takes `parent_id`, where null takes the item out on its own.
 
 ## Headless Utility
 ```php

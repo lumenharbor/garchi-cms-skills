@@ -29,6 +29,7 @@ prompts. Summarised:
 | `list-data-items-tool` | ✅ | ✅ | — | — |
 | `get-data-item-tool` | ✅ | ✅ | — | — |
 | `list-item-meta-tool` | ✅ | ✅ | — | — |
+| `list-item-types-tool` | ✅ | ✅ | — | — |
 | `list-language-tool` | ✅ | ✅ | — | — |
 | `create-page-tool` | — | — | — | — |
 | `update-page-tool` | — | — | — | — |
@@ -44,6 +45,7 @@ prompts. Summarised:
 | `update-data-item-tool` | — | — | — | — |
 | `manage-category-tool` | — | — | — | — |
 | `create-meta-for-item-tool` | — | — | — | — |
+| `create-item-type-tool` | — | — | — | — |
 | `upload-asset-tool` | — | — | — | — |
 | **`generate-image-tool`** | — | — | — | **✅** |
 | `add-language-to-space-tool` | — | — | — | — |
@@ -158,14 +160,18 @@ matching component prop until the code is updated.
 
 ## Data items
 
-**`list-data-items-tool`** (`space_uid`) — items in the space.
+**`list-data-items-tool`** (`space_uid`) — items in the space, each with its
+`parent_id` (the item it is inside, or null), so one call shows how items nest.
 
 **`get-data-item-tool`** (`space_uid`, `item_id`) — one item. `item_id` is
 numeric.
 
 **`create-data-item-tool`** (`space_uid`, `name`, `slug`, `categories[]`,
-`detail_description`, plus optional `one_liner`, `agent_description`, `sku`,
-`stock`, `price`, `scheduled_for_datetime`) — `slug` is unique in the space.
+`detail_description`, plus optional `one_liner`, `agent_description`,
+`parent_id`, `item_type_id`, `sku`, `stock`, `price`, `scheduled_for_datetime`)
+— `slug` is unique in the space. `parent_id` puts the new item inside another
+item of the same space (see "Items inside items" below). `item_type_id` links the item to an item type from
+`list-item-types-tool` in the same space (see "Item types" below).
 `detail_description` is the HTML body; `one_liner` is a one line summary, max
 1000 characters. `categories` needs at least one valid id.
 `sku`/`stock`/`price` apply only to sellable items: `price` accepts decimals
@@ -186,7 +192,9 @@ and say so.
 **`update-data-item-tool`** (`item_id`, `space_uid`, plus any creatable field) —
 same fields, all optional. Only the fields you send are written, and they are
 written as given: `stock: 0`, `price: 0` and an empty `one_liner` all land rather
-than being ignored. An updated item stays a draft unless the user has already
+than being ignored. `item_type_id: null` removes the item's type and keeps all its
+metadata; leaving `item_type_id` out keeps the type. Likewise `parent_id: null`
+takes the item out on its own, and leaving `parent_id` out keeps its place. An updated item stays a draft unless the user has already
 published it; it does not publish itself.
 
 **`list-categories-tool`** (`space_uid`) — categories in the space.
@@ -211,6 +219,59 @@ string; `type` says how to read it:
 | `date` | date string, e.g. `"2026-07-08"` |
 | `array` | JSON-stringified array, e.g. `"[\"a\",\"b\"]"` |
 | `object` | JSON-stringified object, e.g. `"{\"author\":\"Ada\"}"` |
+
+## Items inside items
+
+A data item can sit inside another data item of the same space: a variant
+inside its product, a lesson inside a module inside a course. Items nest at
+most **three levels**, and the items inside a parent keep an order.
+
+- `parent_id` on `create-data-item-tool` / `update-data-item-tool` sets it; the
+  item goes after the items already inside that parent. On update, `null` takes
+  it out on its own.
+- Every item result carries `parent_id`, `children_ids` (in order, drafts
+  included) and `children_count`.
+- Refused, with nothing saved: a parent in another space, the item itself or
+  anything inside it (a loop), or a move that would nest deeper than three
+  levels.
+- Reordering the items inside a parent, and deleting a parent, are done in the
+  dashboard. Deleting a parent keeps the items inside it, at the top level.
+
+## Item types
+
+An item type is the blueprint for one kind of data item — Product, Event, Team
+member, Changelog entry — with a fixed set of fields. It keeps similar items
+consistent for the user's frontend, and gives editors a proper form in the
+dashboard. A typed item's values are **ordinary metadata entries**, one per
+field, so the content API serves them like any other metadata.
+
+**`list-item-types-tool`** (`space_uid`) — the space's types and the ready-made
+`templates`. Each type has `id`, `name`, `slug`, `items_count` and `fields`.
+Each field gives you everything needed to fill it:
+
+| Field property | Use it as |
+| --- | --- |
+| `key` | the metadata `key` |
+| `meta_type` | the metadata `type` |
+| `value_format` | how to write the metadata `value` string |
+| `required` | fill it on every item of the type |
+| `choices` | for a choice field, the only allowed values |
+| `group_fields` | for a group field, the keys of its JSON object |
+
+**`create-item-type-tool`** (`space_uid`, then either `template`, or `name` +
+`fields[]`; optional `description`, `icon`) — creates a type. Templates:
+`product`, `blog_post`, `event`, `changelog`, `team_member`, `faq`; `name`
+renames a template. Each field is `label` + `kind` (`text`, `long_text`,
+`number`, `yes_no`, `date`, `link`, `email`, `color`, `icon`, `choice`, `tags`,
+`group`), optional `key` (made from the label when omitted), `required`,
+`help_text`, `choices` (choice only) and `group_fields` (group only; each
+`label` + `kind` of `text`, `number`, `yes_no`, `date` or `link`). A name the
+space already uses is refused with the existing type's id — use that type. The
+result has the same shape as one listed type. Creating a type changes no item.
+
+There is no update or delete for types over MCP; the user changes fields or
+deletes a type in the dashboard (Data Items → Item types). Deleting a type keeps
+every item and its values.
 
 ## Assets
 
