@@ -59,7 +59,9 @@ Two id traps worth knowing:
 1. **Orient before writing.** `list-space-tool` first. It returns each space's
    `space_uid`, its `agent_description`, per-type content counts and, when set,
    the front-end URL — enough to tell which space the user means and what
-   already exists, without further calls.
+   already exists, without further calls. A space the user was invited to is
+   listed by `list-collaborated-spaces-tool` instead, with the access the user
+   has there.
 2. **Read before you edit.** `get-page-tool` with `mode=draft` (or
    `get-data-item-tool`) to see current values and ids before changing them.
 3. **Verify after you write.** A success message confirms the call ran, not that
@@ -333,7 +335,8 @@ changes is final.
 ## Costs and plan limits
 
 `generate-image-tool` spends part of the account's monthly AI image allowance,
-shared across all of the user's spaces. Ask before generating, keep the prompt
+shared across all of the user's spaces (in a space the user collaborates on,
+the space owner's allowance). Ask before generating, keep the prompt
 under 200 words, describe subject, style, colour and composition, leave a clear
 zone where text will overlay, and do not ask for text inside the image.
 

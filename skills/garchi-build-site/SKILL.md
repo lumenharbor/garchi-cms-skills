@@ -113,7 +113,8 @@ available before planning content work — try `list-space-tool`.
 With MCP available:
 1. `get-garchi-cms-guide` → the current content model and field rules, straight
    from the server. Free, read-only, no arguments.
-2. `list-space-tool` → pick the target space, note its `space_uid`. The result
+2. `list-space-tool` (or `list-collaborated-spaces-tool` for a space the user
+   was invited to) → pick the target space, note its `space_uid`. The result
    also carries content counts and the space's front-end URL, which tells you
    how much already exists before you plan anything.
 3. `list-section-template-tool` → existing templates with their prop ids, keys

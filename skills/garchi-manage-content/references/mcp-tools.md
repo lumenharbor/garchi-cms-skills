@@ -10,7 +10,8 @@ error rather than guessing a different shape. Where no tool covers an operation,
 the REST API may: <https://garchi.co.uk/docs/v2.openapi>.
 
 `space_uid` is required by every space-scoped tool and comes from
-`list-space-tool`.
+`list-space-tool` (spaces the user owns) or `list-collaborated-spaces-tool`
+(spaces the user collaborates on).
 
 ## Safety annotations
 
@@ -21,6 +22,7 @@ prompts. Summarised:
 | --- | :-: | :-: | :-: | :-: |
 | `get-garchi-cms-guide` | ✅ | ✅ | — | — |
 | `list-space-tool` | ✅ | ✅ | — | — |
+| `list-collaborated-spaces-tool` | ✅ | ✅ | — | — |
 | `list-pages-tool` | ✅ | ✅ | — | — |
 | `get-page-tool` | ✅ | ✅ | — | — |
 | `list-section-template-tool` | ✅ | ✅ | — | — |
@@ -74,6 +76,15 @@ owns: `space_uid`, `name`, `agent_description`, `pages_count`, `items_count`,
 `categories_count`, `section_templates_count`, `assets_count`, and
 `front_end_url` when set. Start here. No tool creates a space — the user makes
 one in the dashboard.
+
+**`list-collaborated-spaces-tool`** — no arguments. Returns the spaces another
+account owns that the user was invited to: `space_uid`, `name`,
+`agent_description`, `front_end_url`, `available`, `unavailable_reason`, and
+`access` — `write`, `read` or `none` for `items`, `pages`, `assets`, `social`
+and `space_settings` (brand voice and languages). In such a space every tool
+works only within that access and refuses the rest; when `available` is false,
+pass on `unavailable_reason` instead of retrying. The space owner's plan limits
+and AI image allowance apply there.
 
 ## Pages
 
