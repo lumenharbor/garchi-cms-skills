@@ -45,21 +45,12 @@ agent should be able to tell from the descriptions alone which one applies.
 
 ## Validating changes
 
-```bash
-npm --prefix scripts install && npm --prefix scripts run validate
-```
+Run each platform's own validator, for example `claude plugin validate .`.
 
-That runs four checks in sequence:
-
-| Script | Checks |
-| --- | --- |
-| `validate` (`scripts/validate.mjs`) | JSON syntax, Agent Plugins constraints, cross-manifest consistency, declared paths, skill frontmatter, duplicate triggers, internal links, committed secrets, obsolete API names |
-| `validate:skills` | `skills-ref validate` on each skill |
-| `validate:schemas` | Every manifest against its platform's published JSON Schema (needs network) |
-| `validate:links` | Every external URL, including the starter-kit repositories (needs network) |
-
-Where a platform CLI is installed, run its own validator too, for example
-`claude plugin validate .`.
+This repository ships only Markdown, JSON and the logo PNG. The Claude plugin
+directory refuses scripts, package manager files and `AGENTS.md`/`CLAUDE.md`
+files from non-verified organizations, so keep validation tooling outside this
+repository.
 
 ## Garchi reference
 

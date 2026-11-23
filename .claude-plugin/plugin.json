@@ -11,6 +11,8 @@
   "homepage": "https://garchi.co.uk",
   "repository": "https://github.com/lumenharbor/garchi-cms-skills",
   "license": "MIT",
+  "privacyPolicyUrl": "https://garchi.co.uk/privacy_policy",
+  "termsOfServiceUrl": "https://garchi.co.uk/website_terms_and_conditions",
   "keywords": [
     "garchi",
     "cms",

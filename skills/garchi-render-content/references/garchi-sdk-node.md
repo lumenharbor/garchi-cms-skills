@@ -26,7 +26,7 @@ Always initialize the SDK once and reuse it.
 import GarchiCMS from "@garchicms/garchi-node-sdk";
 
 const garchi = new GarchiCMS({
-  api_key: process.env.GARCHI_API_KEY,
+  api_key: "YOUR_GARCHI_API_KEY", // server-side config value, never sent to the browser
 });
 ```
 

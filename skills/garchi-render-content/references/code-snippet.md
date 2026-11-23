@@ -144,7 +144,7 @@ import { notFound } from "next/navigation";
 
 // garchi client
 export const garchi = new GarchiCMS({
-    api_key: process.env.GARCHI_API_KEY,
+    api_key: "YOUR_GARCHI_API_KEY", // server-side config value, never sent to the browser
     //headers : { key value pair of request headers}
 });
 
@@ -152,7 +152,7 @@ export async function getPage(slug: string, mode: "draft" | "live") {
     try {
         return await garchi.headless.getPage({
             slug,
-            space_uid: process.env.GARCHI_SPACE_UID!,
+            space_uid: "YOUR_SPACE_UID",
             mode
         })
     }
@@ -402,7 +402,7 @@ import PaginationLinks from "./PaginationLinks"
 export const revalidate = 600 // 10 minutes
 
 export const metadata: Metadata = {
-  title: `${process.env.COMPANY_NAME} Blog`,
+  title: `Your Company Blog`,
   description: `Tutorials, headless-CMS guides and startup tech tips from LumenHarbor mentors—your weekly beacon for modern stacks and growth hacks`,
 }
 
@@ -587,7 +587,7 @@ export async function GET(request: Request) {
 
   
   
-  if (previewToken !== process.env.GARCHI_PREVIEW_TOKEN || !slug) {
+  if (previewToken !== "YOUR_PREVIEW_TOKEN" || !slug) {
     return new Response('Invalid token', { status: 401 })
   }
   
